@@ -1,1 +1,5 @@
 // export * from './user'
+export * as authValidation from './auth'
+export * as variantValidation from './variant'
+export * as productValidation from './product'
+export * as catlogueValidation from './catlogue'

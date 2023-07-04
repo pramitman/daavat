@@ -160,12 +160,12 @@ export const forgot_password = async (req: Request, res: Response) => {
             let isAlreadyAssign = await userModel.findOne({ otp: otp });
             if (isAlreadyAssign?.otp != otp) otpFlag = 0;
         }
-        let response: any = await forgot_password_mail(data, otp).then(result => { return result }).catch(error => { return error })
-        if (response) {
-            await userModel.findOneAndUpdate(body, { otp, otpExpireTime: new Date(new Date().setMinutes(new Date().getMinutes() + 10)) })
-            return res.status(200).json(new apiResponse(200, `${response}`, {}, {}));
-        }
-        else return res.status(501).json(new apiResponse(501, responseMessage?.errorMail, {}, `${response}`));
+        // let response: any = await forgot_password_mail(data, otp).then(result => { return result }).catch(error => { return error })
+        // if (response) {
+        //     await userModel.findOneAndUpdate(body, { otp, otpExpireTime: new Date(new Date().setMinutes(new Date().getMinutes() + 10)) })
+        //     return res.status(200).json(new apiResponse(200, `${response}`, {}, {}));
+        // }
+        // else return res.status(501).json(new apiResponse(501, responseMessage?.errorMail, {}, `${response}`));
     } catch (error) {
         return res
             .status(500)
@@ -233,12 +233,12 @@ export const adminSignUp = async (req: Request, res: Response) => {
             if (isAlreadyAssign?.otp != otp) otpFlag = 0;
         }
 
-        let result: any = await email_verification_mail(response, otp);
-        if (result) {
-            await userModel.findOneAndUpdate(body, { otp, otpExpireTime: new Date(new Date().setMinutes(new Date().getMinutes() + 10)) })
-            return res.status(200).json(new apiResponse(200, `${result}`, {}, {}));
-        }
-        else return res.status(501).json(new apiResponse(501, responseMessage?.errorMail, {}, `${result}`));
+        // let result: any = await email_verification_mail(response, otp);
+        // if (result) {
+        //     await userModel.findOneAndUpdate(body, { otp, otpExpireTime: new Date(new Date().setMinutes(new Date().getMinutes() + 10)) })
+        //     return res.status(200).json(new apiResponse(200, `${result}`, {}, {}));
+        // }
+        // else return res.status(501).json(new apiResponse(501, responseMessage?.errorMail, {}, `${result}`));
     } catch (error) {
         console.log(error);
         return res.status(500).json(new apiResponse(500, responseMessage?.internalServerError, {}, error))

@@ -1,7 +1,10 @@
 require('dotenv').config()
 import mongoose from 'mongoose';
 import express from 'express'
-const dbUrl: any = process.env.DB_URL;
+
+import { config } from '../../../config';
+
+const dbUrl: any = config.DB_URL;
 const mongooseConnection = express()
 mongoose.connect(
     dbUrl

@@ -1,6 +1,7 @@
 import server from './src';
 import cluster from 'cluster'
 import os from 'os'
+import { config } from './config';
 // if (cluster.isMaster)
 //     for (let i = 0; i < os.cpus().length; i++) cluster.fork()
 // else {
@@ -9,7 +10,8 @@ import os from 'os'
 //         console.log(`server started on port ${port}`);
 //     });
 // }
-const port = process.env.PORT || 7000;
+
+const port = config.PORT || 7000;
 server.listen(port, () => {
     console.log(`server started on port ${port}`);
 });

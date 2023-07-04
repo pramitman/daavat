@@ -7,14 +7,15 @@ import { Request, Response } from 'express'
 import { apiResponse } from '../common'
 import multer_s3_transform from 'multer-s3-transform'
 import sharp from 'sharp'
+import { config } from '../../config/index';
 
 const s3 = new AWS.S3({
-    accessKeyId: process.env.AWS_KEY_ID,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-    region: process.env.REGION
+    accessKeyId: config.AWS_KEY_ID,
+    secretAccessKey:config.AWS_SECRET_ACCESS_KEY,
+    region: config.REGION
 })
-const bucket_name = process.env.BUCKET_NAME
-const bucket_url = process.env.BUCKET_URL
+const bucket_name = config.BUCKET_NAME
+const bucket_url = config.BUCKET_URL
 
 export const deleteImage = async function (file: any, folder: any , type : any) {
     return new Promise(async function (resolve, reject) {

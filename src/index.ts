@@ -36,10 +36,9 @@ const fileStorage = multer.diskStorage({
     }
   };
 app.use("/images",(req,res,next)=> {
-    console.log("abc ");
     next()
 } ,express.static(path.join(__dirname,".." , ".." , "images")));
-console.log("abc2 ");
+
 
 app.use(cors())
 app.use(mongooseConnection)

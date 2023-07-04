@@ -50,6 +50,7 @@ export const adminJWT = async (req: Request, res: Response, next) => {
         try {
             let isVerifyToken = jwt.verify(authorization, jwt_token_secret)
             if (process?.env?.NODE_ENV == 'production') {
+                console.log("ENV => ",process?.env?.NODE_ENV);
                 // 1 day expiration
                 if (parseInt(isVerifyToken.generatedOn + 86400000) < new Date().getTime()) {
                     // if (parseInt(isVerifyToken.generatedOn + 120000) < new Date().getTime()) {

@@ -23,3 +23,37 @@ export const userStatus = {
 export const unit = [
     "kg"
 ]
+
+export const roleTypes = [
+    "superAdmin",
+    "admin",
+    "agency",
+    "agencySalesman",
+    "agencyDelieveryman",
+    "shop",
+]
+
+export const agencyRole = [
+    "agency"
+]
+
+export const userRole = [
+    "salesman",
+    "deliveryman"
+]
+
+export const generateUserId = (prefix)=> {
+    const randomInt = Math.floor(Math.random() * 100000); // Generate a random integer between 0 and 99999
+    const userId = `${prefix}${randomInt.toString().padStart(5, '0')}`; // Combine the random integer with the prefix ex."u-" and pad with leading zeros
+    return userId;
+}
+
+export const  generatePassword =() => {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'; // Define the possible characters for the password
+    let password = '';
+    for (let i = 0; i < 5; i++) { // Generate a random password of length 5
+      const randomIndex = Math.floor(Math.random() * characters.length); // Generate a random index within the range of the characters array
+      password += characters[randomIndex]; // Add a random character from the characters array to the password
+    }
+    return password;
+}

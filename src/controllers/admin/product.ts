@@ -81,20 +81,20 @@ export const get_all_product = async(req, res) => {
             {$match:match},
             {
                 $lookup:{
-                    from:"catlogues",
-                    let:{catalogueId: "$catalogueId"},
+                    from:"variants",
+                    let:{variantId: "$variantId"},
                     pipeline:[
                         {
                             $match:{
                                 $expr:{
                                     $and:[
-                                        {$eq: ["$_id", "$$catalogueId"]},
+                                        {$eq: ["$_id", "$$variantId"]},
                                     ],
                                 },
                             },
                         },
                     ],
-                    as:"catalogue"
+                    as:"variant"
                 }
             },
             {
@@ -128,9 +128,7 @@ export const get_by_id_product = async(req, res)=>{
     try{
         let response = await productModel.findOne({_id:ObjectId(id), isDeleted : false}).lean()
         if(!response) return res.status(405).json(new apiResponse(405, responseMessage?.getDataNotFound("product"),{},{}))
-        const variants = await variantModel.find({productId:ObjectId(id), isDeleted : false})
-        if(!response) return res.status(405).json(new apiResponse(405, responseMessage?.getDataNotFound("variant"),{},{}))
-        return res.status(200).json(new apiResponse(200, responseMessage?.getDataSuccess("product"),{...response, variants},{}))
+        return res.status(200).json(new apiResponse(200, responseMessage?.getDataSuccess("product"),response,{}))
     }catch(error){
         console.log(error);
         return res.status(500).json(new apiResponse(500, responseMessage?.internalServerError, {}, error))

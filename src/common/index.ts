@@ -28,10 +28,18 @@ export const roleTypes = [
     "superAdmin",
     "admin",
     "agency",
-    "agencySalesman",
-    "agencyDelieveryman",
+    "Salesman",
+    "deliveryman",
     "shop",
 ]
+
+export const ADMIN_ROLES = 
+{
+    SUPERADMIN : "superAdmin",
+    ADMIN : "admin",
+    AGENCY : "agency" ,
+    USER : "user",
+}
 
 export const agencyRole = [
     "agency"

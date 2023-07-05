@@ -6,8 +6,10 @@ const ObjectId = require("mongoose").Types.ObjectId
 
 export const add_variant = async(req, res)=>{
     reqInfo(req)
-    let body = req.body
+    let body = req.body,{user} = req.headers
     try{
+        body.createdBy = ObjectId(user?._id)
+        body.updatedBy = ObjectId(user?._id)
         const response = await new variantModel(body).save()
         if(!response) return res.status(405).json(new apiResponse(405, responseMessage?.addDataError,{},{}))
         return res.status(200).json(new apiResponse(200, responseMessage?.addDataSuccess("variant"),response,{}))
@@ -19,8 +21,9 @@ export const add_variant = async(req, res)=>{
 
 export const edit_variant_by_id = async(req, res)=>{
     reqInfo(req)
-    let body = req.body
+    let body = req.body, {user} = req.headers
     try{
+        body.updatedBy = ObjectId(user?._id)
         const response = await variantModel.findOneAndUpdate({_id: ObjectId(body._id), isDeleted:false}, body, {new:true})
         if(!response) return res.status(405).json(new apiResponse(405, responseMessage?.updateDataError("variant"),{},{}))
         return res.status(200).json(new apiResponse(200, responseMessage?.updateDataSuccess("variant"),response,{}))

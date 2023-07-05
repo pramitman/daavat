@@ -8,11 +8,10 @@ export const signUp = async (req: Request, res: Response, next: any) => {
     const schema = Joi.object({
         name: Joi.string().required(),
         email: Joi.string().lowercase().required(),
-        phone: Joi.string().lowercase().required(),
+        phoneNumber: Joi.string().lowercase().required(),
         password: Joi.string().required(),
-        // lastName: Joi.string().required().error(new Error('lastName is required!')),
-        // middleName: Joi.string().required().error(new Error('lastName is required!')),
-    })
+      
+    }).unknown(true)
     schema.validateAsync(req.body).then(result => {
         return next()
     }).catch(error => {

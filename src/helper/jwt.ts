@@ -5,6 +5,8 @@ import {  apiResponse, userStatus } from '../common'
 import { Request, response, Response } from 'express'
 import { responseMessage } from './response'
 import { adminModel } from '../database/models/admin'
+import { agencyModel } from '../database/models/agency'
+import { userModel } from '../database'
 
 const ObjectId:any = mongoose.Types.ObjectId
 const jwt_token_secret = process.env.JWT_TOKEN_SECRET;
@@ -24,9 +26,9 @@ export const userJWT = async (req: Request, res: Response, next) => {
                 }
             }
 
-            // result = await userModel.findOne({ _id: ObjectId(isVerifyToken._id), isActive: true })
+            // result = await userModel.findOne({ _id: ObjectId(isVerifyToken._id), isDeleted:false })
             if (result?.isBlock == false) return res.status(403).json(new apiResponse(403, responseMessage?.accountBlock, {}, {}));
-            if (result?.isActive == true && isVerifyToken.authToken == result.authToken) {
+            if (result?.isDeleted == false && isVerifyToken.authToken == result.authToken) {
                 // Set in Header Decode Token Information
                 req.headers.user = result
                 return next()
@@ -57,7 +59,9 @@ export const adminJWT = async (req: Request, res: Response, next) => {
                     return res.status(410).json(new apiResponse(410, responseMessage?.tokenExpire, {}, {}))
                 }
             }
-            result = await adminModel.findOne({ _id: ObjectId(isVerifyToken._id), isActive: true });
+            result = await adminModel.findOne({ _id: ObjectId(isVerifyToken._id), isDeleted: false });
+            if(!result) result = await agencyModel.findOne({_id : ObjectId(isVerifyToken._id), isDeleted: false});
+            if(!result) result = await userModel.findOne({_id : ObjectId(isVerifyToken._id), isDeleted: false});
             //if no admin then get roles of that user and save it in array of roles
             if (result?.isBlocked == true) return res.status(403).json(new apiResponse(403, 'Your account han been blocked.', {}, {}));
             if (result?.isDeleted == false && isVerifyToken.authToken == result.authToken && isVerifyToken.type == result.userType) {
@@ -85,6 +89,7 @@ export const uploadJWT = async (req: Request, res: Response, next) => {
             let isVerifyToken = jwt.verify(authorization, jwt_token_secret)
          
             result = await adminModel.findOne({ _id: ObjectId(isVerifyToken._id), isDeleted: false });
+            result = await agencyModel.findOne({ _id: ObjectId(isVerifyToken._id), isDeleted: false });
             
             if (result?.isBlocked == true) return res.status(403).json(new apiResponse(403, 'Your account han been blocked.', {}, {}));
             if (result?.isDeleted == false  && isVerifyToken.type == result.userType) {

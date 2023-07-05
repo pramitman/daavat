@@ -6,6 +6,9 @@ import { userModel, userSessionModel } from '../../database'
 import { apiResponse } from '../../common'
 import { email_verification_mail, forgot_password_mail, reqInfo, responseMessage } from '../../helper'
 import { adminModel } from '../../database/models/admin'
+import { roleDetailsModel } from '../../database/models/role_details'
+import { roleModel } from '../../database/models/role'
+import { agencyModel } from '../../database/models/agency'
 
 const ObjectId = require('mongoose').Types.ObjectId
 const jwt_token_secret = process.env.JWT_TOKEN_SECRET
@@ -20,7 +23,7 @@ export const signUp = async (req: Request, res: Response) => {
             authToken = 0
             let  isAlready : any = await adminModel.findOne({ email: body?.email, isDeleted: false })
         if (isAlready) return res.status(409).json(new apiResponse(409, responseMessage?.alreadyEmail, {}, {}))
-         isAlready = await adminModel.findOne({ phoneNumber: body?.phoneNumber, isActive: true })
+         isAlready = await adminModel.findOne({ phoneNumber: body?.phoneNumber, isDeleted: false })
         if (isAlready) return res.status(409).json(new apiResponse(409, "phone number exist already", {}, {}))
         
 
@@ -62,221 +65,99 @@ export const signUp = async (req: Request, res: Response) => {
     }
 }
 
-export const otp_verification = async (req: Request, res: Response) => {
-    reqInfo(req)
-    let body = req.body
-    try {
-        body.isActive = true
-        let data = await userModel.findOne(body);
-        if (!data) return res.status(400).json(new apiResponse(400, responseMessage?.invalidOTP, {}, {}))
-        if (data.isBlock == true) return res.status(403).json(new apiResponse(403, responseMessage?.accountBlock, {}, {}))
-        if (new Date(data.otpExpireTime).getTime() < new Date().getTime()) return res.status(410).json(new apiResponse(410, responseMessage?.expireOTP, {}, {}))
-        if (data) {
-            let response = await userModel.findOneAndUpdate(body, { otp: null, otpExpireTime: null, isEmailVerified: true, isLoggedIn : true }, { new: true });
-            const token = jwt.sign({
-                _id: response._id,
-                type: response.userType,
-                status: "Login",
-                generatedOn: (new Date().getTime())
-            }, jwt_token_secret)
-
-            await new userSessionModel({
-                createdBy: response._id,
-            }).save()
-
-            let result = {
-                isEmailVerified: response?.isEmailVerified,
-                userType: response?.userType,
-                _id: response?._id,
-                email: response?.email,
-                token,
-            }
-            return res.status(200).json(new apiResponse(200, responseMessage?.OTPverified, result, {}))
-        }
-
-    } catch (error) {
-        return res.status(500).json(new apiResponse(500, responseMessage?.internalServerError, {}, error))
-    }
-}
-
 export const login = async (req: Request, res: Response) => { //email and password
-    let body = req.body,
-        {userId} = req.body,
-        response: any
+    let body = req.body, roleDetails:any ,rootTabs:any
+       
     reqInfo(req)
     try {
+        console.log(body);
+        const response = await adminModel.findOneAndUpdate({ email: body?.email, isDeleted: false }, {  isLoggedIn : true }).select('-__v -createdAt -updatedAt').lean()
+        const agency = await agencyModel.findOneAndUpdate({ uniqueId: body.uniqueId, isDeleted: false }, { isLoggedIn: true }).select('-__v -createdAt -updatedAt').lean()
+        const user = await userModel.findOneAndUpdate({ uniqueId: body.uniqueId, isDeleted: false, }, { isLoggedIn: true }).select('-__v -createdAt -updatedAt').lean()
+       console.log("response => ",agency);
+       if (!response && !agency && !user) return res.status(400).json(new apiResponse(400, responseMessage?.invalidUserPasswordEmail, {}, {}))
+       
+       let userResponse
+       if (response) {
+           userResponse = response
+           const passwordMatch = await bcryptjs.compare(body.password, userResponse.password)
+           if (!passwordMatch) return res.status(400).json(new apiResponse(400, responseMessage?.invalidUserPasswordEmail, {}, {}))
+        } else if (agency) {
+            userResponse = agency
+            //compare agency password
+            if (userResponse.password !== body.password) {
+                return res.status(400).json(new apiResponse(400, responseMessage?.invalidUserPasswordEmail, {}, {}))
+            }
+        } else if (user) {
+            userResponse = user
+            //compare user password
+            if (userResponse.password !== body.password) {
+                return res.status(400).json(new apiResponse(400, responseMessage?.invalidUserPasswordEmail, {}, {}))
+            }
+        }
+        console.log("userResponse => ",userResponse);
+        const token = jwt.sign({
+            _id: userResponse._id,
+            type: userResponse.userType,
+            status: "Login",
+            generatedOn: (new Date().getTime())
+        }, jwt_token_secret)
+
+        await new userSessionModel({
+            createdBy: userResponse._id,
+        }).save()
+
+        if(userResponse.isSuperAdmin == true){
+            return res.status(200).json(new apiResponse(200, responseMessage?.loginSuccess, {...userResponse, token}, {}))
+        }
+        else{
+            if(userResponse.roleId){
+                const roleId = await roleModel.findOne({_id: userResponse.roleId})
+            console.log("roleId = ",roleId);
+            let match:any = {}
+            match.roleId = ObjectId(roleId._id)
+
+            roleDetails = await roleDetailsModel.find({roleId:ObjectId(roleId._id)}).populate({
+                path:"filters.id",
+                select:'filter -_id'
+            }).populate('tabId')
+            .lean()
+            console.log("roleDetails => ",roleDetails);
+            const tabMap = new Map();
+            roleDetails.forEach(roleDetail => {
+            const tab = roleDetail.tabId;
+            const tabId = tab._id.toString();
+  
+            if (!tabMap.has(tabId)) {
+                tab.childTabs = [];
+                tabMap.set(tabId, tab);
+            }
+            });
+           
+           
+            // Build the hierarchy by adding child tabs to their respective parent tabs
+             rootTabs = [];
+            roleDetails.forEach(roleDetail => {
     
-        response = await adminModel.findOneAndUpdate({ email:body.email, isDeleted: false }, {  isLoggedIn : true }).select('-__v -createdAt -updatedAt').lean()
-
-        if (!response) return res.status(400).json(new apiResponse(400, responseMessage?.invalidUserPasswordEmail, {}, {}))
-
-        const passwordMatch = await bcryptjs.compare(body.password, response.password)
-        if (!passwordMatch) return res.status(400).json(new apiResponse(400, responseMessage?.invalidUserPasswordEmail, {}, {}))
-        const token = jwt.sign({
-            _id: response._id,
-            status: "Login",
-            generatedOn: (new Date().getTime())
-        }, jwt_token_secret)
-
-        await new userSessionModel({
-            createdBy: response._id,
-        }).save()
-        // response = {
-        //     _id: response?._id,
-        //     email: response?.email,
-        //     token,
-        // }
-        return res.status(200).json(new apiResponse(200, responseMessage?.loginSuccess, {...response , token}, {}))
-
+            const tab = roleDetail.tabId;
+           
+            const parentId = tab.parentId ? tab.parentId.toString() : null;
+         
+            const parentTab = tabMap.get(parentId);
+         
+            if (parentTab) {
+                parentTab.childTabs.push(roleDetail);
+            } else {
+                //if parentId null then and then push
+                rootTabs.push(roleDetail);
+            }
+            });
+            }
+        }
+        
+            return res.status(200).json(new apiResponse(200, responseMessage?.loginSuccess, {...userResponse, token,  roleDetails : rootTabs}, {}))
     } catch (error) {
         console.log(error);
-        return res.status(500).json(new apiResponse(500, responseMessage?.internalServerError, {}, error))
-    }
-}
-
-export const forgot_password = async (req: Request, res: Response) => {
-    reqInfo(req);
-    let body = req.body, //email or phoneNumber
-        otpFlag = 1, // OTP has already assign or not for cross-verification
-        otp = 0
-    try {
-        body.isActive = true;
-        let data = await userModel.findOne(body);
-
-        if (!data) {
-            return res.status(400).json(new apiResponse(400, responseMessage?.invalidEmail, {}, {}));
-        }
-        if (data.isBlock == true) {
-            return res.status(403).json(new apiResponse(403, responseMessage?.accountBlock, {}, {}));
-        }
-
-        while (otpFlag == 1) {
-            for (let flag = 0; flag < 1;) {
-                otp = await Math.round(Math.random() * 1000000);
-                if (otp.toString().length == 6) {
-                    flag++;
-                }
-            }
-            let isAlreadyAssign = await userModel.findOne({ otp: otp });
-            if (isAlreadyAssign?.otp != otp) otpFlag = 0;
-        }
-        // let response: any = await forgot_password_mail(data, otp).then(result => { return result }).catch(error => { return error })
-        // if (response) {
-        //     await userModel.findOneAndUpdate(body, { otp, otpExpireTime: new Date(new Date().setMinutes(new Date().getMinutes() + 10)) })
-        //     return res.status(200).json(new apiResponse(200, `${response}`, {}, {}));
-        // }
-        // else return res.status(501).json(new apiResponse(501, responseMessage?.errorMail, {}, `${response}`));
-    } catch (error) {
-        return res
-            .status(500)
-            .json(new apiResponse(500, responseMessage?.internalServerError, {}, error));
-    }
-};
-
-export const reset_password = async (req: Request, res: Response) => {
-    reqInfo(req)
-    let body = req.body,
-        { email } = body;
-
-    try {
-
-        const salt = await bcryptjs.genSaltSync(10)
-        const hashPassword = await bcryptjs.hash(body.password, salt)
-        delete body.password
-        delete body.id
-        body.password = hashPassword
-
-        let response = await userModel.findOneAndUpdate({ email: body?.email, isActive: true, otp: null }, body, { new: true })
-        if (response) {
-            return res.status(200).json(new apiResponse(200, responseMessage?.resetPasswordSuccess, response, {}))
-        }
-        else return res.status(501).json(new apiResponse(501, responseMessage?.resetPasswordError, {}, {}))
-
-    } catch (error) {
-        return res.status(500).json(new apiResponse(500, responseMessage?.internalServerError, {}, error))
-    }
-}
-
-
-export const adminSignUp = async (req: Request, res: Response) => {
-    reqInfo(req)
-    try {
-        let body = req.body,
-            otp,
-            otpFlag = 1; // OTP has already assign or not for cross-verification
-        let isAlready = await userModel.findOne({ email: body?.email, isActive: true, userType : 1  })
-        if (isAlready) return res.status(409).json(new apiResponse(409, responseMessage?.alreadyEmail, {}, {}))
-
-        if (isAlready?.isBlock == true) return res.status(403).json(new apiResponse(403, responseMessage?.accountBlock, {}, {}))
-
-        const salt = await bcryptjs.genSaltSync(10)
-        const hashPassword = await bcryptjs.hash(body.password, salt)
-        delete body.password
-        body.password = hashPassword
-        body.userType = 1  //to specify this user is admin
-        let response = await new userModel(body).save()
-        response = {
-            userType: response?.userType,
-            isEmailVerified: response?.isEmailVerified,
-            _id: response?._id,
-            email: response?.email,
-        }
-
-        while (otpFlag == 1) {
-            for (let flag = 0; flag < 1;) {
-                otp = await Math.round(Math.random() * 1000000);
-                if (otp.toString().length == 6) {
-                    flag++;
-                }
-            }
-            let isAlreadyAssign = await userModel.findOne({ otp: otp });
-            if (isAlreadyAssign?.otp != otp) otpFlag = 0;
-        }
-
-        // let result: any = await email_verification_mail(response, otp);
-        // if (result) {
-        //     await userModel.findOneAndUpdate(body, { otp, otpExpireTime: new Date(new Date().setMinutes(new Date().getMinutes() + 10)) })
-        //     return res.status(200).json(new apiResponse(200, `${result}`, {}, {}));
-        // }
-        // else return res.status(501).json(new apiResponse(501, responseMessage?.errorMail, {}, `${result}`));
-    } catch (error) {
-        console.log(error);
-        return res.status(500).json(new apiResponse(500, responseMessage?.internalServerError, {}, error))
-    }
-}
-
-export const adminLogin = async (req: Request, res: Response) => { //email or password // phone or password
-    let body = req.body,
-        response: any
-    reqInfo(req)
-    try {
-        response = await userModel.findOneAndUpdate({ email: body?.email, userType: 1, isActive: true }, { isLoggedIn : true }).select('-__v -createdAt -updatedAt')
-
-        if (!response) return res.status(400).json(new apiResponse(400, responseMessage?.invalidUserPasswordEmail, {}, {}))
-        if (response?.isBlock == true) return res.status(403).json(new apiResponse(403, responseMessage?.accountBlock, {}, {}))
-
-        const passwordMatch = await bcryptjs.compare(body.password, response.password)
-        if (!passwordMatch) return res.status(400).json(new apiResponse(400, responseMessage?.invalidUserPasswordEmail, {}, {}))
-        const token = jwt.sign({
-            _id: response._id,
-            type: response.userType,
-            status: "Login",
-            generatedOn: (new Date().getTime())
-        }, jwt_token_secret)
-
-        await new userSessionModel({
-            createdBy: response._id,
-        }).save()
-        response = {
-            isEmailVerified: response?.isEmailVerified,
-            userType: response?.userType,
-            _id: response?._id,
-            email: response?.email,
-            token,
-        }
-        return res.status(200).json(new apiResponse(200, responseMessage?.loginSuccess, response, {}))
-
-    } catch (error) {
         return res.status(500).json(new apiResponse(500, responseMessage?.internalServerError, {}, error))
     }
 }

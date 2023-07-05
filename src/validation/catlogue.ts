@@ -7,7 +7,7 @@ import { Request, Response } from 'express'
 export const add = async (req: Request, res: Response, next: any) => {
     // console.log(req.body);
     const schema = Joi.object({
-        beverges: Joi.string().required(),
+        name: Joi.string().required(),
         
 
     }).unknown(true); // specify that only the defined keys are allowed
@@ -20,7 +20,7 @@ export const add = async (req: Request, res: Response, next: any) => {
 export const update = async (req: Request, res: Response, next: any) => {
     const schema = Joi.object({
         _id: Joi.string().required(),
-        beverges: Joi.string()
+        name: Joi.string()
     }).unknown(true);
     schema.validateAsync(req.body).then(result => {
         req.body = result

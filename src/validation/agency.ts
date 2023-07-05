@@ -1,6 +1,6 @@
 "use strict"
 import * as Joi from "joi"
-import { apiResponse, unit } from '../common'
+import { apiResponse } from '../common'
 import { isValidObjectId } from 'mongoose'
 import { Request, Response } from 'express'
 
@@ -8,8 +8,11 @@ export const add = async (req: Request, res: Response, next: any) => {
     // console.log(req.body);
     const schema = Joi.object({
         name: Joi.string().required(),
-        quantity: Joi.string().required(),
-        unit: Joi.string().valid(...unit),
+        area: Joi.string().required(),
+        gst: Joi.string().required(),
+        contact: Joi.string().required(),
+        role: Joi.string(),
+        
 
     }).unknown(true); // specify that only the defined keys are allowed
     schema.validateAsync(req.body).then(result => {
@@ -22,8 +25,10 @@ export const update = async (req: Request, res: Response, next: any) => {
     const schema = Joi.object({
         _id: Joi.string().required(),
         name: Joi.string(),
-        quantity: Joi.string(),
-        unit: Joi.string().valid(...unit),
+        area: Joi.string(),
+        gst: Joi.string(),
+        contact: Joi.string(),
+        role: Joi.string(),
     }).unknown(true);
     schema.validateAsync(req.body).then(result => {
         req.body = result

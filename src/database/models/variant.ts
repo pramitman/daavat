@@ -4,13 +4,13 @@ const mongoose = require('mongoose')
 
 const variantSchema: any = new mongoose.Schema({
     name : {type  : String},
-    price : {type : Number},
     quantity : {type : String},
     unit : {type : String, enum: unit},
-    productId : {type: mongoose.Schema.Types.ObjectId, ref:'product'},
     isDeleted: { type: Boolean, default: false },
     isBlocked: { type: Boolean, default: false },
-
+    createdBy: {type: mongoose.Schema.Types.ObjectId, default : null},
+    updatedBy: {type: mongoose.Schema.Types.ObjectId, default : null},
+    
 }, { timestamps: true })
 
 export const variantModel = mongoose.model('variant', variantSchema);

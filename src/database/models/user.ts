@@ -1,19 +1,19 @@
+import { userRole } from "../../common";
+
 const mongoose = require('mongoose')
 
 const userSchema: any = new mongoose.Schema({
     name : {type  : String},
-    email: { type: String, required: true },
-    phoneNumber: { type: String},
-    password: { type: String },
-    profilePhoto : {type : String},
-   
-    otp: { type: Number, default: null },
-    otpExpireTime: { type: Date, default: null },
-    isEmailVerified: { type: Boolean, default: false },
-   
-    isActive: { type: Boolean, default: true },
-    isBlock: { type: Boolean, default: false },
+    uniqueId : {type : String},
+    password : {type : String},
+    role : {type : String, enum : userRole},
+    agencyId : {type : mongoose.Schema.Types.ObjectId, ref:"agency"},
+    roleId: {type : mongoose.Schema.Types.ObjectId, ref:"role"},
+    isDeleted: { type: Boolean, default: false },
+    isBlocked: { type: Boolean, default: false },
     isLoggedIn : { type : Boolean , defailt : false},
+    createdBy: {type: mongoose.Schema.Types.ObjectId, default : null},
+    updatedBy: {type: mongoose.Schema.Types.ObjectId, default : null},
 
 }, { timestamps: true })
 

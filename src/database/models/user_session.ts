@@ -1,7 +1,7 @@
 var mongoose = require('mongoose')
 // import mongoose from 'mongoose'
 const userSessionSchema = new mongoose.Schema({
-    isActive: { type: Boolean, default: true },
+    isDeleted: { type: Boolean, default: false },
     createdBy: { type: mongoose.Schema.Types.ObjectId },
     refresh_token: { type: String }
 }, { timestamps: true })

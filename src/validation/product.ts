@@ -9,8 +9,12 @@ export const add = async (req: Request, res: Response, next: any) => {
     const schema = Joi.object({
         name: Joi.string().required(),
         price: Joi.number().required(),
-        descripation: Joi.string().required(),
-        catalogueId: Joi.string(),
+        productImage: Joi.array().items(Joi.string()),
+        descripation: Joi.string(),
+        isPcsForSell: Joi.boolean(),
+        cartoonPrice: Joi.number(),
+        pcsPrice: Joi.number(),
+        cartoonUnit: Joi.string(),
 
     }).unknown(true); // specify that only the defined keys are allowed
     schema.validateAsync(req.body).then(result => {
@@ -23,8 +27,13 @@ export const update = async (req: Request, res: Response, next: any) => {
     const schema = Joi.object({
         _id: Joi.string().required(),
         name: Joi.string(),
-        price: Joi.string(),
-        descripation: Joi.string()
+        price: Joi.number(),
+        productImage: Joi.array().items(Joi.string()),
+        descripation: Joi.string(),
+        isPcsForSell: Joi.boolean(),
+        cartoonPrice: Joi.number(),
+        pcsPrice: Joi.number(),
+        cartoonUnit: Joi.string(),
     }).unknown(true);
     schema.validateAsync(req.body).then(result => {
         req.body = result

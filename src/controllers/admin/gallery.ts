@@ -11,7 +11,7 @@ export const add_gallery = async(req, res)=>{
         body.createdBy = ObjectId(user?._id)
         body.updatedBy = ObjectId(user?._id)
         const response = await new galleryModel(body).save()
-        if(!response) return res.status(405).json(new apiResponse(405, responseMessage?.addDataError,{},{}))
+        if(!response) return res.status(400).json(new apiResponse(400, responseMessage?.addDataError,{},{}))
         return res.status(200).json(new apiResponse(200, responseMessage?.addDataSuccess("gallery"),response,{}))
     }catch(error){
         console.log(error);
@@ -25,7 +25,7 @@ export const edit_gallery_by_id = async(req, res)=>{
     try{
         body.updatedBy = ObjectId(user?._id)
         const response = await galleryModel.findOneAndUpdate({_id:ObjectId(body?._id), isDeleted:false}, body, {new:true})
-        if(!response) return res.status(405).json(new apiResponse(405, responseMessage?.updateDataError("gallery"),{},{}))
+        if(!response) return res.status(404).json(new apiResponse(404, responseMessage?.updateDataError("gallery"),{},{}))
         return res.status(200).json(new apiResponse(200, responseMessage?.updateDataSuccess("gallery"),response,{}))
     }catch(error){
         console.log(error);
@@ -38,7 +38,7 @@ export const delete_gallery_by_id = async(req, res)=>{
     let {id} = req.params
     try{
         const response = await galleryModel.findOneAndUpdate({_id:ObjectId(id), isDeleted: false}, {isDeleted: true}, {new:true})
-        if(!response) return res.status(405).json(new apiResponse(405, responseMessage?.getDataNotFound("gallery"),{},{}))
+        if(!response) return res.status(400).json(new apiResponse(400, responseMessage?.getDataNotFound("gallery"),{},{}))
         return res.status(200).json(new apiResponse(200, responseMessage?.deleteDataSuccess("gallery"),response,{}))
     }catch(error){
         console.log(error);
@@ -77,7 +77,7 @@ export const get_by_id_gallery = async(req, res)=>{
     let {id}=req.params
     try{
         const response = await galleryModel.findOne({_id:ObjectId(id), isDeleted : false})
-        if(!response) return res.status(405).json(new apiResponse(405, responseMessage?.getDataNotFound("product"),{},{}))
+        if(!response) return res.status(400).json(new apiResponse(400, responseMessage?.getDataNotFound("product"),{},{}))
         return res.status(200).json(new apiResponse(200, responseMessage?.getDataSuccess("product"),response,{}))
     }catch(error){
         console.log(error);

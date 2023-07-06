@@ -21,7 +21,7 @@ export const add_agency = async(req, res)=>{
         body.uniqueId = userId;
         if(!body.password) body.password = generatePassword();
         const response = await new agencyModel(body).save()
-        if(!response) return res.status(405).json(new apiResponse(405, responseMessage?.addDataError,{},{}))
+        if(!response) return res.status(400).json(new apiResponse(400, responseMessage?.addDataError,{},{}))
         return res.status(200).json(new apiResponse(200, responseMessage?.addDataSuccess("agency"),response,{}))
     }catch(error){
         console.log(error);
@@ -48,7 +48,7 @@ export const delete_agency_by_id = async(req, res)=>{
     let {id} = req.params
     try{
         const response = await agencyModel.findOneAndUpdate({_id:ObjectId(id), isDeleted: false}, {isDeleted: true}, {new:true})
-        if(!response) return res.status(405).json(new apiResponse(405, responseMessage?.getDataNotFound("agency"),{},{}))
+        if(!response) return res.status(400).json(new apiResponse(400, responseMessage?.getDataNotFound("agency"),{},{}))
         return res.status(200).json(new apiResponse(200, responseMessage?.deleteDataSuccess("agency"),response,{}))
     }catch(error){
         console.log(error);
@@ -87,7 +87,7 @@ export const get_by_id_agency = async(req, res)=>{
     let {id}=req.params
     try{
         const response = await agencyModel.findOne({_id:ObjectId(id), isDeleted : false})
-        if(!response) return res.status(405).json(new apiResponse(405, responseMessage?.getDataNotFound("agency"),{},{}))
+        if(!response) return res.status(400).json(new apiResponse(400, responseMessage?.getDataNotFound("agency"),{},{}))
         return res.status(200).json(new apiResponse(200, responseMessage?.getDataSuccess("agency"),response,{}))
     }catch(error){
         console.log(error);

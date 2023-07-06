@@ -12,7 +12,7 @@ export const add_catlogue = async(req, res)=>{
         body.createdBy = ObjectId(user?._id)
         body.updatedBy = ObjectId(user?._id)
         const response = await new catalogueModel(body).save()
-        if(!response) return res.status(405).json(new apiResponse(405, responseMessage?.addDataError,{},{}))
+        if(!response) return res.status(400).json(new apiResponse(400, responseMessage?.addDataError,{},{}))
         return res.status(200).json(new apiResponse(200, responseMessage?.addDataSuccess("catlogue"),response,{}))
     }catch(error){
         console.log(error);
@@ -39,7 +39,7 @@ export const delete_catlogue_by_id = async(req, res)=>{
     let {id} = req.params
     try{
         const response = await catalogueModel.findOneAndUpdate({_id:ObjectId(id), isDeleted: false}, {isDeleted: true}, {new:true})
-        if(!response) return res.status(405).json(new apiResponse(405, responseMessage?.getDataNotFound("catlogue"),{},{}))
+        if(!response) return res.status(400).json(new apiResponse(400, responseMessage?.getDataNotFound("catlogue"),{},{}))
         return res.status(200).json(new apiResponse(200, responseMessage?.deleteDataSuccess("catlogue"),response,{}))
     }catch(error){
         console.log(error);
@@ -78,7 +78,7 @@ export const get_by_id_catlogue = async(req, res)=>{
     let {id}=req.params
     try{
         const response = await catalogueModel.findOne({_id:ObjectId(id), isDeleted : false})
-        if(!response) return res.status(405).json(new apiResponse(405, responseMessage?.getDataNotFound("product"),{},{}))
+        if(!response) return res.status(400).json(new apiResponse(400, responseMessage?.getDataNotFound("product"),{},{}))
         return res.status(200).json(new apiResponse(200, responseMessage?.getDataSuccess("product"),response,{}))
     }catch(error){
         console.log(error);

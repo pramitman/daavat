@@ -12,7 +12,7 @@ export const add_product = async(req, res)=>{
         body.createdBy = ObjectId(user?._id)
         body.updatedBy = ObjectId(user?._id)
         const response = await new productModel(body).save()
-        if(!response) return res.status(405).json(new apiResponse(405, responseMessage?.addDataError,{},{}))
+        if(!response) return res.status(400).json(new apiResponse(400, responseMessage?.addDataError,{},{}))
         return res.status(200).json(new apiResponse(200, responseMessage?.addDataSuccess("product"),response,{}))
     }catch(error){
         console.log(error);
@@ -26,7 +26,7 @@ export const edit_product_by_id = async(req, res)=>{
     try{
         body.updatedBy = ObjectId(user?._id)
         const response = await productModel.findOneAndUpdate({_id:ObjectId(body._id), isDeleted:false}, body, {new:true})
-        if(!response) return res.status(405).json(new apiResponse(405, responseMessage?.updateDataError("product"),{},{}))
+        if(!response) return res.status(404).json(new apiResponse(404, responseMessage?.updateDataError("product"),{},{}))
         return res.status(200).json(new apiResponse(200, responseMessage?.updateDataSuccess("product"),response,{}))
     }catch(error){
         console.log(error);
@@ -39,7 +39,7 @@ export const delete_product_by_id = async(req, res)=>{
     let {id} = req.params
     try{
         const response = await productModel.findOneAndUpdate({_id:ObjectId(id), isDeleted: false}, {isDeleted: true}, {new:true})
-        if(!response) return res.status(405).json(new apiResponse(405, responseMessage?.getDataNotFound("product"),{},{}))
+        if(!response) return res.status(400).json(new apiResponse(400, responseMessage?.getDataNotFound("product"),{},{}))
         return res.status(200).json(new apiResponse(200, responseMessage?.deleteDataSuccess("product"),response,{}))
     }catch(error){
         console.log(error);
@@ -127,7 +127,7 @@ export const get_by_id_product = async(req, res)=>{
     let {id}=req.params
     try{
         let response = await productModel.findOne({_id:ObjectId(id), isDeleted : false}).lean()
-        if(!response) return res.status(405).json(new apiResponse(405, responseMessage?.getDataNotFound("product"),{},{}))
+        if(!response) return res.status(400).json(new apiResponse(400, responseMessage?.getDataNotFound("product"),{},{}))
         return res.status(200).json(new apiResponse(200, responseMessage?.getDataSuccess("product"),response,{}))
     }catch(error){
         console.log(error);

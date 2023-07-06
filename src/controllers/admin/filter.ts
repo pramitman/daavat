@@ -15,7 +15,7 @@ export const add_filter = async(req,res)=>{
         body.tabId = ObjectId(body.tabId)
         const response = await new filterModel(body).save();
 
-        if(!response) return res.status(404).json(new apiResponse(404, responseMessage?.addDataError,{},{}))
+        if(!response) return res.status(400).json(new apiResponse(400, responseMessage?.addDataError,{},{}))
         const updatedtab = await tabMasterModel.findOneAndUpdate({_id: body.tabId}, {$push:{filters:ObjectId(response._id)}},{new:true})
 
         return res.status(200).json(new apiResponse(200, responseMessage?.addDataSuccess("filter"),updatedtab,{}))
@@ -44,7 +44,7 @@ export const get_filter_by_tabId = async(req, res)=>{
     let body = req.body, {id} = req.params
     try{
         const response = await filterModel.findOne({tabId: ObjectId(id), isDeleted: false})
-        if(!response) return res.status(404).json(new apiResponse(404, responseMessage?.getDataNotFound('filter'),{},{}))
+        if(!response) return res.status(400).json(new apiResponse(400, responseMessage?.getDataNotFound('filter'),{},{}))
         return res.status(200).json(new apiResponse(200, responseMessage?.getDataSuccess("filter"),response, {}))
     }catch(error){
         console.log(error);

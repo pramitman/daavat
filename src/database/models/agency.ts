@@ -1,4 +1,4 @@
-import { agencyRole } from "../../common";
+import { roleTypes } from "../../common";
 
 const mongoose = require('mongoose')
 
@@ -10,7 +10,7 @@ const agencySchema = new mongoose.Schema({
     contact : {type : String},
     uniqueId : {type : String},
     password : {type : String},
-    role: {type : String, enum : agencyRole},
+    role: {type : String, enum : roleTypes},
     roleId : {type : mongoose.Schema.Types.ObjectId, ref : "role"},
     isDeleted : {type  :Boolean , default : false},
     isBlocked : {type  :Boolean , default : false},

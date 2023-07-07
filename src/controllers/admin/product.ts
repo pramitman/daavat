@@ -47,80 +47,82 @@ export const delete_product_by_id = async(req, res)=>{
     }
 }
 
-// export const get_all_product = async(req, res) => {
-//     reqInfo(req)
-//     let {page, limit, search} = req.body, response:any, match = req.body
-//     try{
-//         match.isDeleted = false
-//         const populate = [{path:"catalogueId"}]
-//         response = await productModel.find(match).populate(populate)
-//         .sort({ createdAt: -1 })
-//         .skip((page - 1) * limit)
-//         .limit(limit)
-          
-//         const count = response.length
-//         return res.status(200).json(new apiResponse(200, responseMessage?.getDataSuccess('product'), {
-//             product_data: response,
-//             state: {
-//                 page: page ,
-//                 limit: limit ,
-//                 page_limit: Math.ceil(count / limit) || 1,
-//             }
-//         }, {}))
-//     }catch(error){
-//         console.log(error);
-//         return res.status(500).json(new apiResponse(500, responseMessage?.internalServerError, {}, error))
-//     }
-// }
-
 export const get_all_product = async(req, res) => {
-    let response:any, match:any = {}, {page,limit}= req.body
-
+    reqInfo(req)
+    let {page, limit, search, variantFilter} = req.body, response:any, match = req.body
     try{
-        response = await productModel.aggregate([
-            {$match:match},
-            {
-                $lookup:{
-                    from:"variants",
-                    let:{variantId: "$variantId"},
-                    pipeline:[
-                        {
-                            $match:{
-                                $expr:{
-                                    $and:[
-                                        {$eq: ["$_id", "$$variantId"]},
-                                    ],
-                                },
-                            },
-                        },
-                    ],
-                    as:"variant"
-                }
-            },
-            {
-                $facet:{
-                    data:[
-                        {$sort : {createdAt: - 1}},
-                        {$skip: (((page as number -1)* limit as number))},
-                        {$limit: limit as number}
-                    ],
-                    data_count: [{ $count: "count" }]
-                }
+        match.isDeleted = false
+        if(variantFilter) match.variantId = variantFilter
+        const populate = [{path:"variantId"}]
+        response = await productModel.find(match).populate(populate)
+        .sort({ createdAt: -1 })
+        .skip((page - 1) * limit)
+        .limit(limit)
+          
+        const count = response.length
+        return res.status(200).json(new apiResponse(200, responseMessage?.getDataSuccess('product'), {
+            product_data: response,
+            state: {
+                page: page ,
+                limit: limit ,
+                page_limit: Math.ceil(count / limit) || 1,
             }
-        ])
-        return res.status(200).json(new apiResponse(200, responseMessage?.getDataSuccess('product'),{
-            product_data :response[0].data,
-            state:{
-                page:page as number,
-                limit: limit as number,
-                page_limit:Math.ceil(response[0].data_count[0]?.count/(req.body.limit)as number) || 1
-            }
-        },{}))
+        }, {}))
     }catch(error){
         console.log(error);
-        return res.status(500).json(new apiResponse(500,responseMessage?.internalServerError,{},error))
+        return res.status(500).json(new apiResponse(500, responseMessage?.internalServerError, {}, error))
     }
 }
+
+// export const get_all_product = async(req, res) => {
+//     let response:any, match:any = {}, {page,limit}= req.body
+
+//     try{
+//         match.
+//         response = await productModel.aggregate([
+//             {$match:match},
+//             {
+//                 $lookup:{
+//                     from:"variants",
+//                     let:{variantId: "$variantId"},
+//                     pipeline:[
+//                         {
+//                             $match:{
+//                                 $expr:{
+//                                     $and:[
+//                                         {$eq: ["$_id", "$$variantId"]},
+//                                     ],
+//                                 },
+//                             },
+//                         },
+//                     ],
+//                     as:"variant"
+//                 }
+//             },
+//             {
+//                 $facet:{
+//                     data:[
+//                         {$sort : {createdAt: - 1}},
+//                         {$skip: (((page as number -1)* limit as number))},
+//                         {$limit: limit as number}
+//                     ],
+//                     data_count: [{ $count: "count" }]
+//                 }
+//             }
+//         ])
+//         return res.status(200).json(new apiResponse(200, responseMessage?.getDataSuccess('product'),{
+//             product_data :response[0].data,
+//             state:{
+//                 page:page as number,
+//                 limit: limit as number,
+//                 page_limit:Math.ceil(response[0].data_count[0]?.count/(req.body.limit)as number) || 1
+//             }
+//         },{}))
+//     }catch(error){
+//         console.log(error);
+//         return res.status(500).json(new apiResponse(500,responseMessage?.internalServerError,{},error))
+//     }
+// }
 
 export const get_by_id_product = async(req, res)=>{
     reqInfo(req)

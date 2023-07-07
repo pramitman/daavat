@@ -65,7 +65,7 @@ export const get_all = async(req:Request, res:Response, next: any)=>{
         page: Joi.number().min(1),
         limit: Joi.number().min(1),
         isAdminRole: Joi.boolean().optional()
-      });
+      }).unknown(true)
       schema.validateAsync(req.body).then(result => {
         req.body = result
         return next()

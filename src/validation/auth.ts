@@ -20,28 +20,23 @@ export const signUp = async (req: Request, res: Response, next: any) => {
 
 }
 
-export const update = async (req: Request, res: Response, next: any) => {
+export const verifyOtp = async (req: Request, res: Response, next: any) => {
     const schema = Joi.object({
-        _id: Joi.string().required(),
-        oldPassword: Joi.string(),
-        newPassword: Joi.string().when('oldPassword', {
-            is: Joi.exist(),
-            then: Joi.required(),
-            otherwise: Joi.forbidden()
-        })
+        shopId: Joi.string().required(),
+        otp: Joi.string(),
     }).unknown(true);
     schema.validateAsync(req.body).then(result => {
         req.body = result
-        if (!isValidObjectId(result._id)) return res.status(400).json(new apiResponse(400, "Invalid _id format", {}, {}));
+        if (!isValidObjectId(result.shopId)) return res.status(400).json(new apiResponse(400, "Invalid _id format", {}, {}));
         return next()
     }).catch(error => { res.status(400).json(new apiResponse(400, error.message, {}, {})) })
 }
 
 export const login = async (req: Request, res: Response, next: any) => {
     const schema = Joi.object({
-        email: Joi.string().lowercase().error(new Error('please provide appropriate email!')),
-        uniqueId:Joi.string().lowercase().error(new Error('uniqueId is required')),
-        password: Joi.string().required().error(new Error('password is required!')),
+        email: Joi.string().lowercase(),
+        uniqueId:Joi.string().lowercase(),
+        password: Joi.string().required(),
     })
     schema.validateAsync(req.body).then(result => {
         return next()
@@ -49,4 +44,15 @@ export const login = async (req: Request, res: Response, next: any) => {
         res.status(400).json(new apiResponse(400, error.message, {}, {}));
     })
 
+}
+
+export const resendOtp = async (req: Request, res: Response, next: any) => {
+    const schema = Joi.object({
+        shopId: Joi.string().required(),
+    }).unknown(true);
+    schema.validateAsync(req.body).then(result => {
+        req.body = result
+        if (!isValidObjectId(result.shopId)) return res.status(400).json(new apiResponse(400, "Invalid _id format", {}, {}));
+        return next()
+    }).catch(error => { res.status(400).json(new apiResponse(400, error.message, {}, {})) })
 }

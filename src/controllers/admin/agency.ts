@@ -15,7 +15,7 @@ export const add_agency = async(req, res)=>{
             prefix = "AG";
         while(!userId){
             let temp = generateUserId(prefix);
-            const copy =  await agencyModel.findOne({uniqueId : temp , isDeleted : false ,role:"agency"});
+            const copy =  await agencyModel.findOne({uniqueId : temp , isDeleted : false, role:"agency"});
            if(!copy) userId = temp;
         }
         body.uniqueId = userId;

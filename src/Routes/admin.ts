@@ -2,7 +2,7 @@
 import { Router } from 'express'
 import { adminController, authController } from '../controllers'
 import { adminJWT } from '../helper'
-import { agencyValidation, authValidation, catlogueValidation, filterValidation, galleryValidation, productValidation, roleValidation, tabmasterValidation, userValidation, variantValidation } from '../validation'
+import { agencyValidation, authValidation, catlogueValidation, filterValidation, galleryValidation, orderValidation, productValidation, roleValidation, shopValidation, tabmasterValidation, userValidation, variantValidation } from '../validation'
 import { ADMIN_ROLES } from '../common'
 import { VALIDATE_ROLE } from '../helper/middleware'
 
@@ -11,6 +11,7 @@ const router = Router()
 
 router.post("/signup", authValidation.signUp, authController.signUp)
 router.post("/login", authValidation.login, authController.login)
+
 
 router.use(adminJWT)
 //-------------------- Variant --------------------
@@ -75,5 +76,19 @@ router.get("/role/details/:id",VALIDATE_ROLE([ADMIN_ROLES.SUPERADMIN]),  roleVal
 router.post("/filter/add",VALIDATE_ROLE([ADMIN_ROLES.SUPERADMIN]), filterValidation.add ,adminController.add_filter)
 router.post("/filter/edit",VALIDATE_ROLE([ADMIN_ROLES.SUPERADMIN]), filterValidation.update, adminController.edit_filter_by_id)
 router.get("/filter/:id",VALIDATE_ROLE([ADMIN_ROLES.SUPERADMIN]), filterValidation.by_id, adminController.get_filter_by_tabId)
+
+//-------------------- Shop --------------------
+router.post("/shop/add", VALIDATE_ROLE([ADMIN_ROLES.SUPERADMIN, ADMIN_ROLES.SALESMAN]), shopValidation.add, adminController.add_shop)
+router.post("/shop/edit",  VALIDATE_ROLE([ADMIN_ROLES.SUPERADMIN, ADMIN_ROLES.SALESMAN]), shopValidation.update, adminController.edit_shop_by_id)
+router.delete("/shop/:id", VALIDATE_ROLE([ADMIN_ROLES.SUPERADMIN]), shopValidation.by_id, adminController.delete_shop_by_id)
+router.post("/shop/get/all", VALIDATE_ROLE([ADMIN_ROLES.SUPERADMIN,ADMIN_ROLES.AGENCY, ADMIN_ROLES.SALESMAN]), shopValidation.get_all,  adminController.get_all_shop)
+router.get("/shop/:id", VALIDATE_ROLE([ADMIN_ROLES.SUPERADMIN,  ADMIN_ROLES.SALESMAN]), shopValidation.by_id, adminController.get_by_id_shop)
+router.post("/shop/otp/verify", authValidation.verifyOtp, adminController.verifyOtp)
+router.post("/shop/resend", authValidation.verifyOtp, adminController.resendOtp)
+
+//-------------------- Order --------------------
+router.post("/order/add", VALIDATE_ROLE([ADMIN_ROLES.SUPERADMIN]), orderValidation.add, adminController.add_order)
+router.post("/order/edit",  VALIDATE_ROLE([ADMIN_ROLES.SUPERADMIN, ADMIN_ROLES.DELIVERYMAN]), orderValidation.update, adminController.edit_order_by_id)
+router.post("/order/get/all", VALIDATE_ROLE([ADMIN_ROLES.SUPERADMIN, ADMIN_ROLES.DELIVERYMAN, ADMIN_ROLES.SALESMAN]), orderValidation.get_all,  adminController.get_all_order)
 
 export const adminRouter = router

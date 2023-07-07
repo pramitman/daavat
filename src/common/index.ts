@@ -24,11 +24,24 @@ export const unit = [
     "kg"
 ]
 
+export const unitType = [
+    "pcs",
+    "cartoon"
+]
+
+export const status = [
+    "pending",
+    "approve",
+    "delivery",
+    "canceled",
+    "delivered",
+]
+
 export const roleTypes = [
     "superAdmin",
     "admin",
     "agency",
-    "Salesman",
+    "salesman",
     "deliveryman",
     "shop",
 ]
@@ -38,17 +51,34 @@ export const ADMIN_ROLES =
     SUPERADMIN : "superAdmin",
     ADMIN : "admin",
     AGENCY : "agency" ,
-    USER : "user",
+    SALESMAN : "salesman",
+    DELIVERYMAN : "deliveryman",
+    SHOP : "shop",
 }
 
-export const agencyRole = [
-    "agency"
-]
+// export const agencyRole = [
+//     "agency"
+// ]
 
-export const userRole = [
-    "salesman",
-    "deliveryman"
-]
+// export const userRole = [
+//     "salesman",
+//     "deliveryman"
+// ]
+
+export const generate_otp = async () => {
+    try {
+        //   let options = {
+        //         length : 6,
+        //         charset : '123456789'
+        //   }
+        //   let otp = random_string.generate(options);
+        const otp = Math.floor(1000 + Math.random() * 9000);
+        //let otp = 123456;
+        return otp;
+    } catch (err) {
+        throw err;
+    }
+};
 
 export const generateUserId = (prefix)=> {
     const randomInt = Math.floor(Math.random() * 100000); // Generate a random integer between 0 and 99999

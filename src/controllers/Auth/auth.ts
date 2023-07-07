@@ -3,12 +3,13 @@ import bcryptjs from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import { Request, Response } from 'express'
 import { userModel, userSessionModel } from '../../database'
-import { apiResponse } from '../../common'
+import { apiResponse, generate_otp } from '../../common'
 import { email_verification_mail, forgot_password_mail, reqInfo, responseMessage } from '../../helper'
 import { adminModel } from '../../database/models/admin'
 import { roleDetailsModel } from '../../database/models/role_details'
 import { roleModel } from '../../database/models/role'
 import { agencyModel } from '../../database/models/agency'
+import { shopModel } from '../../database/models/shop'
 
 const ObjectId = require('mongoose').Types.ObjectId
 const jwt_token_secret = process.env.JWT_TOKEN_SECRET
@@ -35,10 +36,9 @@ export const signUp = async (req: Request, res: Response) => {
         body.password = hashPassword
         let response = await new adminModel(body).save()
         response = {
-            userType: response?.userType,
-            isEmailVerified: response?.isEmailVerified,
-            _id: response?._id,
-            email: response?.email,
+            role : response?.role,
+            _id : response?._id,
+            email : response?.email,
         }
 
         // while (otpFlag == 1) {
@@ -72,10 +72,11 @@ export const login = async (req: Request, res: Response) => { //email and passwo
     try {
         console.log(body);
         const response = await adminModel.findOneAndUpdate({ email: body?.email, isDeleted: false }, {  isLoggedIn : true }).select('-__v -createdAt -updatedAt').lean()
-        const agency = await agencyModel.findOneAndUpdate({ uniqueId: body.uniqueId, isDeleted: false }, { isLoggedIn: true }).select('-__v -createdAt -updatedAt').lean()
-        const user = await userModel.findOneAndUpdate({ uniqueId: body.uniqueId, isDeleted: false, }, { isLoggedIn: true }).select('-__v -createdAt -updatedAt').lean()
-       console.log("response => ",agency);
-       if (!response && !agency && !user) return res.status(400).json(new apiResponse(400, responseMessage?.invalidUserPasswordEmail, {}, {}))
+        const agency = await agencyModel.findOneAndUpdate({ uniqueId: body?.uniqueId, isDeleted: false }, { isLoggedIn: true }).select('-__v -createdAt -updatedAt').lean()
+        const user = await userModel.findOneAndUpdate({ uniqueId: body?.uniqueId, isDeleted: false, }, { isLoggedIn: true }).select('-__v -createdAt -updatedAt').lean()
+        const shop = await shopModel.findOneAndUpdate({ uniqueId: body?.uniqueId, isDeleted: false, }, { isLoggedIn: true }).select('-__v -createdAt -updatedAt').lean()
+
+       if (!response && !agency && !user && !shop) return res.status(400).json(new apiResponse(400, responseMessage?.invalidUserPasswordEmail, {}, {}))
        
        let userResponse
        if (response) {
@@ -90,6 +91,12 @@ export const login = async (req: Request, res: Response) => { //email and passwo
             }
         } else if (user) {
             userResponse = user
+            //compare user password
+            if (userResponse.password !== body.password) {
+                return res.status(400).json(new apiResponse(400, responseMessage?.invalidUserPasswordEmail, {}, {}))
+            }
+        }else if (shop) {
+            userResponse = shop
             //compare user password
             if (userResponse.password !== body.password) {
                 return res.status(400).json(new apiResponse(400, responseMessage?.invalidUserPasswordEmail, {}, {}))

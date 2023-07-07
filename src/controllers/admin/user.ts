@@ -1,5 +1,6 @@
 import { apiResponse, generatePassword, generateUserId } from "../../common";
 import { userModel } from "../../database";
+import { shopModel } from "../../database/models/shop";
 import { reqInfo, responseMessage } from "../../helper"
 
 const ObjectId = require('mongoose').Types.ObjectId
@@ -58,11 +59,15 @@ export const delete_user_by_id = async(req, res)=>{
 
 export const get_all_user = async(req, res) => {
     reqInfo(req)
-    let {page, limit, search} = req.body, response:any, match = req.body
+    let {page, limit, search, areaCode} = req.body, response:any, match = req.body, {user}=req.headers
     try{
+        
         match.isDeleted = false
-
-        response = await userModel.find(match)
+        const populate = [
+            {
+                path : "agencyId"
+            }]
+        response = await userModel.find(match).populate(populate)
         .sort({ createdAt: -1 })
             .skip((page - 1) * limit)
             .limit(limit)

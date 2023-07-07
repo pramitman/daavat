@@ -7,6 +7,7 @@ import { responseMessage } from './response'
 import { adminModel } from '../database/models/admin'
 import { agencyModel } from '../database/models/agency'
 import { userModel } from '../database'
+import { shopModel } from '../database/models/shop'
 
 const ObjectId:any = mongoose.Types.ObjectId
 const jwt_token_secret = process.env.JWT_TOKEN_SECRET;
@@ -62,6 +63,7 @@ export const adminJWT = async (req: Request, res: Response, next) => {
             result = await adminModel.findOne({ _id: ObjectId(isVerifyToken._id), isDeleted: false });
             if(!result) result = await agencyModel.findOne({_id : ObjectId(isVerifyToken._id), isDeleted: false});
             if(!result) result = await userModel.findOne({_id : ObjectId(isVerifyToken._id), isDeleted: false});
+            if(!result) result = await shopModel.findOne({_id : ObjectId(isVerifyToken._id), isDeleted: false});
             //if no admin then get roles of that user and save it in array of roles
             if (result?.isBlocked == true) return res.status(403).json(new apiResponse(403, 'Your account han been blocked.', {}, {}));
             if (result?.isDeleted == false && isVerifyToken.authToken == result.authToken && isVerifyToken.type == result.userType) {

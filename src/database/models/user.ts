@@ -1,4 +1,4 @@
-import { userRole } from "../../common";
+import { roleTypes } from "../../common";
 
 const mongoose = require('mongoose')
 
@@ -6,7 +6,7 @@ const userSchema: any = new mongoose.Schema({
     name : {type  : String},
     uniqueId : {type : String},
     password : {type : String},
-    role : {type : String, enum : userRole},
+    role : {type : String, enum : roleTypes},
     agencyId : {type : mongoose.Schema.Types.ObjectId, ref:"agency"},
     roleId: {type : mongoose.Schema.Types.ObjectId, ref:"role"},
     isDeleted: { type: Boolean, default: false },

@@ -1,5 +1,5 @@
 import { apiResponse } from "../../common";
-import { filterModel } from "../../database/models/filter";
+import { filterModel } from "../../database";
 import { tabMasterModel } from "../../database/models/tab_master";
 
 import { reqInfo, responseMessage } from "../../helper";

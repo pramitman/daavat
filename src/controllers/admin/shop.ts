@@ -1,7 +1,7 @@
 import { apiResponse, generatePassword, generateUserId, generate_otp } from "../../common";
-import { shopModel } from "../../database/models/shop";
 import jwt from 'jsonwebtoken'
 import { reqInfo, responseMessage } from "../../helper"
+import { shopModel } from "../../database";
 
 const jwt_token_secret = process.env.JWT_TOKEN_SECRET
 const ObjectId = require('mongoose').Types.ObjectId

@@ -1,5 +1,5 @@
 import { apiResponse, generatePassword, generateUserId } from "../../common";
-import { orderModel } from "../../database/models/order";
+import { orderModel } from "../../database";
 import { reqInfo, responseMessage } from "../../helper"
 
 const ObjectId = require('mongoose').Types.ObjectId

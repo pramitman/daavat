@@ -1,6 +1,5 @@
 import { apiResponse } from "../../common";
-import { roleDetailsModel } from "../../database/models/role_details";
-import { tabMasterModel } from "../../database/models/tab_master";
+import { roleDetailsModel, tabMasterModel } from "../../database";
 import { responseMessage } from "../../helper";
 
 const ObjectId = require('mongoose').Types.ObjectId

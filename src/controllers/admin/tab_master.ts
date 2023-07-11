@@ -1,6 +1,5 @@
 import { apiResponse } from "../../common";
-import { filterModel } from "../../database/models/filter";
-import { tabMasterModel } from "../../database/models/tab_master";
+import { filterModel, tabMasterModel } from "../../database";
 import { reqInfo, responseMessage } from "../../helper"
 
 const ObjectId = require('mongoose').Types.ObjectId

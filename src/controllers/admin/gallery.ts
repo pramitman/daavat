@@ -1,5 +1,5 @@
 import { apiResponse } from "../../common";
-import { galleryModel } from "../../database/models/gallery";
+import { galleryModel } from "../../database";
 import { reqInfo, responseMessage } from "../../helper"
 
 const ObjectId = require('mongoose').Types.ObjectId

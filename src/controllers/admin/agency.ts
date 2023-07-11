@@ -1,5 +1,5 @@
 import { apiResponse, generatePassword, generateUserId } from "../../common";
-import { agencyModel } from "../../database/models/agency";
+import { agencyModel } from "../../database";
 import { reqInfo, responseMessage } from "../../helper"
 
 const ObjectId = require('mongoose').Types.ObjectId

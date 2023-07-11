@@ -1,6 +1,6 @@
 import { apiResponse } from "../../common";
-import { roleModel } from "../../database/models/role";
-import { roleDetailsModel } from "../../database/models/role_details";
+import { roleDetailsModel, roleModel } from "../../database";
+
 
 import { reqInfo, responseMessage } from "../../helper"
 

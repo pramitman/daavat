@@ -1,6 +1,5 @@
 import { apiResponse } from "../../common";
-import { productModel } from "../../database/models/product";
-import { variantModel } from "../../database/models/variant";
+import { productModel } from "../../database/models/product"
 import { reqInfo, responseMessage } from "../../helper"
 
 const ObjectId = require('mongoose').Types.ObjectId

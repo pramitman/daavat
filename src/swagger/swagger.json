@@ -304,6 +304,7 @@
         }
       }
     },
+    
     "/admin/variant/delete/{id}": {
       "delete": {
         "tags": [

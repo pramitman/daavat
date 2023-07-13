@@ -1613,6 +1613,7 @@
         }
       }
     },
+    
     "/admin/gallery/delete/{id}": {
       "delete": {
         "tags": [

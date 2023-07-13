@@ -10,6 +10,9 @@ export const signUp = async (req: Request, res: Response, next: any) => {
         email: Joi.string().lowercase().required(),
         phoneNumber: Joi.string().lowercase().required(),
         password: Joi.string().required(),
+        role: Joi.string().required(),
+        roleId : Joi.string(),
+        isSuperAdmin : Joi.boolean().required().default(false)
       
     }).unknown(true)
     schema.validateAsync(req.body).then(result => {

@@ -8,7 +8,7 @@ const adminSchema: any = new mongoose.Schema({
     isSuperAdmin: {type : Boolean, default:false},
     role : {type :String},
     roleId : {type : mongoose.Schema.Types.ObjectId, ref : 'role', default:null},
-    isDeleted: { type: Boolean, default: false },
+    isDeleted: { type: Boolean, default: false },   
     isBlocked: { type: Boolean, default: false },
     isLoggedIn : { type : Boolean , default : false},
     createdBy: { type: mongoose.Schema.Types.ObjectId, default : null},

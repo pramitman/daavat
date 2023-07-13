@@ -51,8 +51,7 @@ export const get_all_variant = async(req, res) => {
     let {page, limit, search} = req.body, response:any, match = req.body
     try{
         match.isDeleted = false
-        const populate = [{path:"productId"}]
-        response = await variantModel.find(match).populate(populate)
+        response = await variantModel.find(match)
         .sort({ createdAt: -1 })
         .skip((page - 1) * limit)
         .limit(limit)

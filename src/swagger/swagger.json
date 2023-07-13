@@ -1,0 +1,1036 @@
+{
+    "openapi": "3.0.3",
+    "info": {
+      "version": "1.0.0",
+      "title": "Daavat API Documentation",
+      "description": "Find out how your APIs work",
+      "license": {
+        "name": "MIT",
+        "url": "https://opensource.org/licenses/MIT"
+      }
+    },
+    "servers": [
+      {
+        "url": "http://localhost:7000",
+        "description": "Local server"
+      },
+      {
+        "url": "http://localhost:8000",
+        "description": "Local server"
+      }
+    ],
+    "tags": [
+        {
+          "name": "Admin"
+        },
+        {
+          "name":"Variant"
+        },
+        {
+          "name":"Catlogue"
+        }
+    ],
+    "consumes": [
+      "application/json",
+      "multipart/form-data"
+    ],
+    "produces": [
+      "application/json"
+    ],
+    "securityDefinitions": {
+      "ApiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "authorization"
+      }
+    },
+    "paths": {
+        "/admin/signup":{
+            "post" : {
+                "tags": [
+                    "Admin"
+                ],
+                "description": "adminSignUp",
+                "security": [
+                    {
+                      "ApiKeyAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                      "name": "content-language",
+                      "in": "header",
+                      "description": "Headers Data",
+                      "schema": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "name": "signature",
+                      "in": "header",
+                      "description": "Headers Data",
+                      "schema": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "name": "businessName",
+                      "in": "header",
+                      "description": "Headers Data",
+                      "schema": {
+                        "type": "string"
+                      }
+                    }
+                  ],
+                  "operationId": "adminSignUp",
+                  "requestBody": {
+                    "content": {
+                      "application/json": {
+                        "schema": {
+                          "$ref": "#/components/schemas/adminSignUp"
+                        }
+                      }
+                    }
+                  },
+                  "produces": [
+                    "application/json"
+                  ],
+                  "responses": {
+                    "200": {
+                      "description": "Admin Created Successfully.",
+                      "content": {
+                        "application/json": {
+                          "schema": {
+                            "$ref": "#/components/schemas/adminSignUp"
+                          }
+                        }
+                      }
+                    }
+                }
+            }
+        },
+        "/admin/login":{
+          "post" : {
+              "tags": [
+                  "Admin"
+              ],
+              "description": "Admin Login",
+              "security": [
+                  {
+                    "ApiKeyAuth": []
+                  }
+              ],
+              "parameters": [
+                  {
+                    "name": "content-language",
+                    "in": "header",
+                    "description": "Headers Data",
+                    "schema": {
+                      "type": "string"
+                    }
+                  },
+                  {
+                    "name": "signature",
+                    "in": "header",
+                    "description": "Headers Data",
+                    "schema": {
+                      "type": "string"
+                    }
+                  },
+                  {
+                    "name": "businessName",
+                    "in": "header",
+                    "description": "Headers Data",
+                    "schema": {
+                      "type": "string"
+                    }
+                  }
+                ],
+                "operationId": "login",
+                "requestBody": {
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "$ref": "#/components/schemas/adminLogin"
+                      }
+                    }
+                  }
+                },
+                "produces": [
+                  "application/json"
+                ],
+                "responses": {
+                  "200": {
+                    "description": "Admin Created Successfully.",
+                    "content": {
+                      "application/json": {
+                        "schema": {
+                          "$ref": "#/components/schemas/adminLogin"
+                        }
+                      }
+                    }
+                  }
+              }
+          }
+        },
+        "/admin/variant/add": {
+          "post": {
+            "tags": [
+              "Variant"
+            ],
+            "description": "Register Admins",
+            "security": [
+              {
+                "ApiKeyAuth": []
+              }
+            ],
+            "parameters": [
+              {
+                "name": "content-language",
+                "in": "header",
+                "description": "Headers Data",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              {
+                "name": "signature",
+                "in": "header",
+                "description": "Headers Data",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              {
+                "name": "businessName",
+                "in": "header",
+                "description": "Headers Data",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            ],
+            "operationId": "addVariant",
+            "requestBody": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/addVariant"
+                  }
+                }
+              }
+            },
+            "produces": [
+              "application/json"
+            ],
+            "responses": {
+              "200": {
+                "description": "Variant Created Successfully.",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "$ref": "#/components/schemas/addVariant"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "/admin/variant/edit": {
+          "post": {
+            "tags": [
+              "Variant"
+            ],
+            "description": "Register Admins",
+            "security": [
+              {
+                "ApiKeyAuth": []
+              }
+            ],
+            "parameters": [
+              {
+                "name": "content-language",
+                "in": "header",
+                "description": "Headers Data",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              {
+                "name": "signature",
+                "in": "header",
+                "description": "Headers Data",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              {
+                "name": "businessName",
+                "in": "header",
+                "description": "Headers Data",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            ],
+            "operationId": "updateVariant",
+            "requestBody": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/updateVariant"
+                  }
+                }
+              }
+            },
+            "produces": [
+              "application/json"
+            ],
+            "responses": {
+              "200": {
+                "description": "Variant Updated Successfully.",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "$ref": "#/components/schemas/updateVariant"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "/admin/variant/delete/{id}": {
+          "delete": {
+            "tags": [
+              "Variant"
+            ],
+            "description": "deleteVariant",
+            "parameters": [
+              {
+                "name": "content-language",
+                "in": "header",
+                "description": "Headers Data",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              {
+                "name": "signature",
+                "in": "header",
+                "description": "Headers Data",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              {
+                "name": "businessName",
+                "in": "header",
+                "description": "Headers Data",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              {
+                "name": "id",
+                "in": "path",
+                "description": "Headers Data",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            ],
+            "operationId": "deleteVariant",
+            "security": [
+              {
+                "ApiKeyAuth": []
+              }
+            ],
+            "requestBody": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/deleteVariant"
+                  }
+                }
+              }
+            },
+            "produces": [
+              "application/json"
+            ],
+            "responses": {
+              "200": {
+                "description": "Variant Deleted Successfully.",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "$ref": "#/components/schemas/deleteVariant"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "/admin/variant/get/all": {
+          "post": {
+            "tags": [
+              "Variant"
+            ],
+            "description": "Get All Admin",
+            "security": [
+              {
+                "ApiKeyAuth": []
+              }
+            ],
+            "parameters": [
+              {
+                "name": "content-language",
+                "in": "header",
+                "description": "Headers Data",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              {
+                "name": "signature",
+                "in": "header",
+                "description": "Headers Data",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              {
+                "name": "businessName",
+                "in": "header",
+                "description": "Headers Data",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            ],
+            "operationId": "getAllVariant",
+            "requestBody": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/getAllVariant"
+                  }
+                }
+              }
+            },
+            "produces": [
+              "application/json"
+            ],
+            "responses": {
+              "200": {
+                "description": "Variant listing Successfully.",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "$ref": "#/components/schemas/getAllVariant"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "/admin/variant/{id}": {
+          "get": {
+            "tags": [
+              "Variant"
+            ],
+            "description": "getVariantDetails",
+            "operationId": "getVariantDetails",
+            "security": [
+              {
+                "ApiKeyAuth": []
+              }
+            ],
+            "parameters": [
+              {
+                "name": "content-language",
+                "in": "header",
+                "description": "Headers Data",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              {
+                "name": "signature",
+                "in": "header",
+                "description": "Headers Data",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              {
+                "name": "businessName",
+                "in": "header",
+                "description": "Headers Data",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              {
+                "name": "id",
+                "in": "path",
+                "description": "It should be Variant",
+                "schema": {
+                  "$ref": "#/components/schemas/getVariantDetails"
+                }
+              }
+            ],
+            "produces": [
+              "application/json"
+            ],
+            "responses": {
+              "200": {
+                "description": "Variant Listing Successfully.",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "$ref": "#/components/schemas/getVariantDetails"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "/admin/catlogue/add": {
+          "post": {
+            "tags": [
+              "Catlogue"
+            ],
+            "description": "Register Admins",
+            "security": [
+              {
+                "ApiKeyAuth": []
+              }
+            ],
+            "parameters": [
+              {
+                "name": "content-language",
+                "in": "header",
+                "description": "Headers Data",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              {
+                "name": "signature",
+                "in": "header",
+                "description": "Headers Data",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              {
+                "name": "businessName",
+                "in": "header",
+                "description": "Headers Data",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            ],
+            "operationId": "addCatlogue",
+            "requestBody": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/addCatlogue"
+                  }
+                }
+              }
+            },
+            "produces": [
+              "application/json"
+            ],
+            "responses": {
+              "200": {
+                "description": "Catlogue Created Successfully.",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "$ref": "#/components/schemas/addCatlogue"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "/admin/catlogue/edit": {
+          "post": {
+            "tags": [
+              "Catlogue"
+            ],
+            "description": "Register Admins",
+            "security": [
+              {
+                "ApiKeyAuth": []
+              }
+            ],
+            "parameters": [
+              {
+                "name": "content-language",
+                "in": "header",
+                "description": "Headers Data",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              {
+                "name": "signature",
+                "in": "header",
+                "description": "Headers Data",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              {
+                "name": "businessName",
+                "in": "header",
+                "description": "Headers Data",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            ],
+            "operationId": "updateVariant",
+            "requestBody": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/updateCatlogue"
+                  }
+                }
+              }
+            },
+            "produces": [
+              "application/json"
+            ],
+            "responses": {
+              "200": {
+                "description": "Catlogue Updated Successfully.",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "$ref": "#/components/schemas/updateCatlogue"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "/admin/catlogue/delete/{id}": {
+          "delete": {
+            "tags": [
+              "Catlogue"
+            ],
+            "description": "deleteCatlogue",
+            "parameters": [
+              {
+                "name": "content-language",
+                "in": "header",
+                "description": "Headers Data",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              {
+                "name": "signature",
+                "in": "header",
+                "description": "Headers Data",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              {
+                "name": "businessName",
+                "in": "header",
+                "description": "Headers Data",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              {
+                "name": "id",
+                "in": "path",
+                "description": "Headers Data",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            ],
+            "operationId": "deleteCatlogue",
+            "security": [
+              {
+                "ApiKeyAuth": []
+              }
+            ],
+            "requestBody": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/deleteCatlogue"
+                  }
+                }
+              }
+            },
+            "produces": [
+              "application/json"
+            ],
+            "responses": {
+              "200": {
+                "description": "Users Created Successfully.",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "$ref": "#/components/schemas/deleteCatlogue"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "/admin/catlogue/get/all": {
+          "post": {
+            "tags": [
+              "Catlogue"
+            ],
+            "description": "Get All Admin",
+            "security": [
+              {
+                "ApiKeyAuth": []
+              }
+            ],
+            "parameters": [
+              {
+                "name": "content-language",
+                "in": "header",
+                "description": "Headers Data",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              {
+                "name": "signature",
+                "in": "header",
+                "description": "Headers Data",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              {
+                "name": "businessName",
+                "in": "header",
+                "description": "Headers Data",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            ],
+            "operationId": "getAllCatlogue",
+            "requestBody": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/getAllCatlogue"
+                  }
+                }
+              }
+            },
+            "produces": [
+              "application/json"
+            ],
+            "responses": {
+              "200": {
+                "description": "Catlogue listing Successfully.",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "$ref": "#/components/schemas/getAllCatlogue"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "/admin/catlogue/{id}": {
+          "get": {
+            "tags": [
+              "Catlogue"
+            ],
+            "description": "getCatlogueDetails",
+            "operationId": "getCatlogueDetails",
+            "security": [
+              {
+                "ApiKeyAuth": []
+              }
+            ],
+            "parameters": [
+              {
+                "name": "content-language",
+                "in": "header",
+                "description": "Headers Data",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              {
+                "name": "signature",
+                "in": "header",
+                "description": "Headers Data",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              {
+                "name": "businessName",
+                "in": "header",
+                "description": "Headers Data",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              {
+                "name": "id",
+                "in": "path",
+                "description": "It should be Variant",
+                "schema": {
+                  "$ref": "#/components/schemas/getCatlogueDetails"
+                }
+              }
+            ],
+            "produces": [
+              "application/json"
+            ],
+            "responses": {
+              "200": {
+                "description": "Variant Listing Successfully.",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "$ref": "#/components/schemas/getCatlogueDetails"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+    },
+    "components": {
+      "schemas": {
+        "adminSignUp": {
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "email": {
+              "type": "string"
+            },
+            "phoneNumber": {
+              "type": "string"
+            },
+            "password": {
+              "type": "string"
+            },
+            "role":{
+              "type":"string"
+            },
+            "roleId":{
+              "type":"string"
+            },
+            "isSuperAdmin":{
+              "type":"boolean",
+              "default":false
+            }
+          }
+        },
+        "adminLogin": {
+          "properties": {
+            "email": {
+              "type": "string"
+            },
+            "password": {
+              "type": "string"
+            }
+          }
+        },
+        "addVariant":{
+          "properties": {
+            "name":{
+              "type" : "string"
+            },
+            "quantity":{
+              "type" : "string"
+            },
+            "unit":{
+              "type" : "string"
+            }
+          }
+        },
+        "updateVariant":{
+          "properties": {
+            "_id":{
+              "type":"string"
+            },
+            "name":{
+              "type" : "string"
+            },
+            "quantity":{
+              "type" : "string"
+            },
+            "unit":{
+              "type" : "array"
+            }
+          }
+        },
+        "deleteVariant":{
+          "properties" : {
+
+          }
+        },
+        "getAllVariant": {
+          "properties": {
+            "page":{
+              "type": "number"
+            },
+            "limit":{
+              "type":"number"
+            }
+          }
+        },
+        "getVarinatDetails": {
+          "properties": {
+            "id": {
+              "type": "string"
+            }
+          }
+        },
+        "addCatlogue":{
+          "properties": {
+            "name":{
+              "type" : "string"
+            },
+            "quantity":{
+              "type" : "string"
+            },
+            "unit":{
+              "type" : "string"
+            }
+          }
+        },
+        "updateCatlogue":{
+          "properties": {
+            "_id":{
+              "type":"string"
+            },
+            "name":{
+              "type" : "string"
+            },
+            "quantity":{
+              "type" : "string"
+            },
+            "unit":{
+              "type" : "array"
+            }
+          }
+        },
+        "deleteCatlogue":{
+          "properties" : {
+
+          }
+        },
+        "getAllCatlogue": {
+          "properties": {
+            "page":{
+              "type": "number"
+            },
+            "limit":{
+              "type":"number"
+            }
+          }
+        },
+        "getCatlogueDetails": {
+          "properties": {
+            "id": {
+              "type": "string"
+            }
+          }
+        },
+        "addProduct":{
+          "properties": {
+            "name":{
+              "type" : "string"
+            },
+            "price":{
+              "type" : "string"
+            },
+            "productImage":{
+              "type" : "array"
+            },
+            "descripation":{
+              "type" : "string"
+            },
+            "isPcsForSell":{
+              "type" : "boolean"
+            },
+            "cartoonPrice":{
+              "type" : "number"
+            },
+            "pcsPrice":{
+              "type" : "number"
+            },
+            "cartoonUnit":{
+              "type" : "string"
+            }
+          }
+        },
+        "updateProduct":{
+          "properties": {
+            "name":{
+              "type" : "string"
+            },
+            "price":{
+              "type" : "string"
+            },
+            "productImage":{
+              "type" : "array"
+            },
+            "descripation":{
+              "type" : "string"
+            },
+            "isPcsForSell":{
+              "type" : "boolean"
+            },
+            "cartoonPrice":{
+              "type" : "number"
+            },
+            "pcsPrice":{
+              "type" : "number"
+            },
+            "cartoonUnit":{
+              "type" : "string"
+            }
+          }
+        }
+      },
+      "securitySchemes": {
+        "ApiKeyAuth": {
+          "type": "apiKey",
+          "in": "header",
+          "name": "authorization"
+        }
+      }
+  }
+}

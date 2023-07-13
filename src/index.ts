@@ -12,7 +12,9 @@ import * as packageInfo from '../package.json'
 import { router } from './Routes'
 import path from "path"
 import multer from "multer";
-
+import swaggerUi from "swagger-ui-express";
+import * as swaggerDocument from "./swagger/swagger.json";
+const routesV1 =  require("./Routes/index")
 const app = express();
 
 const fileStorage = multer.diskStorage({
@@ -35,6 +37,8 @@ const fileStorage = multer.diskStorage({
       cb(null, false);
     }
   };
+
+
 app.use("/images",(req,res,next)=> {
     next()
 } ,express.static(path.join(__dirname,".." , ".." , "images")));
@@ -47,6 +51,11 @@ app.use(bodyParser.urlencoded({ limit: '200mb', extended: true }))
 app.use(
     multer({ storage: fileStorage, fileFilter: fileFilter }).single("image")
   );
+
+
+app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+// app.use('/api/migration', migrationRoute);
+
 const health = (req, res) => {
     return res.status(200).json({
         message: `Q&A Server is Running, Server health is green`,
@@ -57,7 +66,7 @@ const health = (req, res) => {
         license: packageInfo.license
     })
 }
-const bad_gateway = (req, res) => { return res.status(502).json({ status: 502, message: "Q&A Backend API Bad Gateway" }) }
+// const bad_gateway = (req, res) => { return res.status(502).json({ status: 502, message: "Q&A Backend API Bad Gateway" }) }
 
 app.get('/', health);
 app.get('/health', health);
@@ -65,7 +74,7 @@ app.get('/isServerUp', (req, res) => {
     res.send('Server is running ');
 });
 app.use(router)
-app.use('*', bad_gateway);
+// app.use('*', bad_gateway);
 
 let server = new http.Server(app);
 export default server;

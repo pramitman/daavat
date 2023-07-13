@@ -19,6 +19,7 @@ const orderSchema = new mongoose.Schema({
     delieverymanId: {type : mongoose.Schema.Types.ObjectId, ref:"user", default : null},
     status: {type : String, enum: status, default : "pending"},
     isDeleted : {type  :Boolean , default : false},
+    isBlocked : {type : Boolean, default : false},
     createdBy: {type : mongoose.Schema.Types.ObjectId, ref:"admin"},
     updatedBy:{type : mongoose.Schema.Types.ObjectId, ref:"admin"},
     

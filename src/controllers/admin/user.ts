@@ -60,7 +60,6 @@ export const get_all_user = async(req, res) => {
     reqInfo(req)
     let {page, limit, search, areaCode} = req.body, response:any, match = req.body, {user}=req.headers
     try{
-        
         match.isDeleted = false
         const populate = [
             {

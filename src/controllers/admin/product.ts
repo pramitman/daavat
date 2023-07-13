@@ -73,56 +73,6 @@ export const get_all_product = async(req, res) => {
     }
 }
 
-// export const get_all_product = async(req, res) => {
-//     let response:any, match:any = {}, {page,limit}= req.body
-
-//     try{
-//         match.
-//         response = await productModel.aggregate([
-//             {$match:match},
-//             {
-//                 $lookup:{
-//                     from:"variants",
-//                     let:{variantId: "$variantId"},
-//                     pipeline:[
-//                         {
-//                             $match:{
-//                                 $expr:{
-//                                     $and:[
-//                                         {$eq: ["$_id", "$$variantId"]},
-//                                     ],
-//                                 },
-//                             },
-//                         },
-//                     ],
-//                     as:"variant"
-//                 }
-//             },
-//             {
-//                 $facet:{
-//                     data:[
-//                         {$sort : {createdAt: - 1}},
-//                         {$skip: (((page as number -1)* limit as number))},
-//                         {$limit: limit as number}
-//                     ],
-//                     data_count: [{ $count: "count" }]
-//                 }
-//             }
-//         ])
-//         return res.status(200).json(new apiResponse(200, responseMessage?.getDataSuccess('product'),{
-//             product_data :response[0].data,
-//             state:{
-//                 page:page as number,
-//                 limit: limit as number,
-//                 page_limit:Math.ceil(response[0].data_count[0]?.count/(req.body.limit)as number) || 1
-//             }
-//         },{}))
-//     }catch(error){
-//         console.log(error);
-//         return res.status(500).json(new apiResponse(500,responseMessage?.internalServerError,{},error))
-//     }
-// }
-
 export const get_by_id_product = async(req, res)=>{
     reqInfo(req)
     let {id}=req.params

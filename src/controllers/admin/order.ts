@@ -15,7 +15,7 @@ export const add_order = async(req, res)=>{
         for (const product of body.products) {
           totalPrice = product.price * product.quantity;
         }
-        body.total = totalPrice 
+        body.total = totalPrice
 
         const response = await new orderModel(body).save()
         if(!response) return res.status(400).json(new apiResponse(400, responseMessage?.addDataError,{},{}))
@@ -42,18 +42,23 @@ export const edit_order_by_id = async(req, res)=>{
 
 export const get_all_order = async(req, res) => {
     reqInfo(req)
-    let {page, limit, search, salesmanFilter, delieverymanFilter} = req.body, response:any, match = req.body, {user} = req.headers
+    let {page, limit, search, salesmanFilter, delieverymanFilter,statusFilter} = req.body, response:any, match = req.body, {user} = req.headers
     console.log("user => ",user);
     try{
         if(salesmanFilter){
             match.salesmanId = ObjectId(salesmanFilter)
-            match.delieverymanId = ObjectId(delieverymanFilter);
+        }
+        if(delieverymanFilter){
+            match.delieverymanId = ObjectId(delieverymanFilter)
         }else if(user.role == "salesman"){
             match.salesmanId = ObjectId(user._id);
+            match.isDeleted = false
         }else if(user.role == "deliveryman"){
             match.delieverymanId = ObjectId(user._id);
+        }else if(user.role == "shop"){
+            match.shopId = ObjectId(user._id)
         }
-        match.isDeleted = false
+        if(statusFilter) match.status = statusFilter
         console.log("match => ",match);
         const populate = [
             {
@@ -82,6 +87,20 @@ export const get_all_order = async(req, res) => {
                     page_limit: Math.ceil(count / limit) || 1,
                 }
             }, {}))
+    }catch(error){
+        console.log(error);
+        return res.status(500).json(new apiResponse(500, responseMessage?.internalServerError, {}, error))
+    }
+}
+
+
+export const delete_order_by_id = async(req, res)=>{
+    reqInfo(req)
+    let {id} = req.params
+    try{
+        const response = await orderModel.findOneAndUpdate({_id:ObjectId(id), isDeleted: false}, {isDeleted: true}, {new:true})
+        if(!response) return res.status(400).json(new apiResponse(400, responseMessage?.getDataNotFound("catlogue"),{},{}))
+        return res.status(200).json(new apiResponse(200, responseMessage?.deleteDataSuccess("catlogue"),response,{}))
     }catch(error){
         console.log(error);
         return res.status(500).json(new apiResponse(500, responseMessage?.internalServerError, {}, error))

@@ -58,7 +58,7 @@ export const signUp = async (req: Request, res: Response) => {
         //     return res.status(200).json(new apiResponse(200, `${result}`, {}, {}));
         // }
         // else return res.status(501).json(new apiResponse(501, responseMessage?.errorMail, {}, `${result}`));
-        return res.status(200).json(new apiResponse(200, responseMessage?.addDataSuccess("user"),response , {}));
+        return res.status(200).json(new apiResponse(200, responseMessage?.addDataSuccess("admin"),response , {}));
     } catch (error) {
         console.log(error);
         return res.status(500).json(new apiResponse(500, responseMessage?.internalServerError, {}, error))

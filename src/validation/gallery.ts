@@ -8,6 +8,7 @@ export const add = async (req: Request, res: Response, next: any) => {
     // console.log(req.body);
     const schema = Joi.object({
         descripation: Joi.string().required(),
+        image : Joi.string()
     }).unknown(true); // specify that only the defined keys are allowed
     schema.validateAsync(req.body).then(result => {
         req.body = result
@@ -18,7 +19,8 @@ export const add = async (req: Request, res: Response, next: any) => {
 export const update = async (req: Request, res: Response, next: any) => {
     const schema = Joi.object({
         _id: Joi.string().required(),
-        descripation: Joi.string()
+        descripation: Joi.string(),
+        image : Joi.string()
     }).unknown(true);
     schema.validateAsync(req.body).then(result => {
         req.body = result

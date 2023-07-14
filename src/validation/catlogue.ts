@@ -8,8 +8,8 @@ export const add = async (req: Request, res: Response, next: any) => {
     // console.log(req.body);
     const schema = Joi.object({
         name: Joi.string().required(),
-        
-
+        image : Joi.array().items(Joi.string()),
+        variants : Joi.array()
     }).unknown(true); // specify that only the defined keys are allowed
     schema.validateAsync(req.body).then(result => {
         req.body = result

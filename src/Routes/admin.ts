@@ -84,7 +84,7 @@ router.delete("/shop/delete/:id", VALIDATE_ROLE([ADMIN_ROLES.SUPERADMIN]), shopV
 router.post("/shop/get/all", VALIDATE_ROLE([ADMIN_ROLES.SUPERADMIN,ADMIN_ROLES.AGENCY, ADMIN_ROLES.SALESMAN]), shopValidation.get_all,  adminController.get_all_shop)
 router.get("/shop/:id", VALIDATE_ROLE([ADMIN_ROLES.SUPERADMIN,  ADMIN_ROLES.SALESMAN]), shopValidation.by_id, adminController.get_by_id_shop)
 router.post("/shop/otp/verify", VALIDATE_ROLE([ADMIN_ROLES.SUPERADMIN,  ADMIN_ROLES.SALESMAN]), authValidation.verifyOtp, adminController.verifyOtp)
-router.post("/shop/resend",VALIDATE_ROLE([ADMIN_ROLES.SUPERADMIN,  ADMIN_ROLES.SALESMAN]), authValidation.resendOtp, adminController.resendOtp)
+router.post("/shop/otp/resend",VALIDATE_ROLE([ADMIN_ROLES.SUPERADMIN,  ADMIN_ROLES.SALESMAN]), authValidation.resendOtp, adminController.resendOtp)
 
 //-------------------- Order --------------------
 router.post("/order/add", VALIDATE_ROLE([ADMIN_ROLES.SUPERADMIN, ADMIN_ROLES.SHOP]), orderValidation.add, adminController.add_order)

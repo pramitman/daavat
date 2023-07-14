@@ -12,6 +12,7 @@ export const add = async (req: Request, res: Response, next: any) => {
         gst: Joi.string().required(),
         contact: Joi.string().required(),
         role: Joi.string(),
+        roleId : Joi.string()
         
 
     }).unknown(true); // specify that only the defined keys are allowed
@@ -29,6 +30,7 @@ export const update = async (req: Request, res: Response, next: any) => {
         gst: Joi.string(),
         contact: Joi.string(),
         role: Joi.string(),
+        roleId : Joi.string()
     }).unknown(true);
     schema.validateAsync(req.body).then(result => {
         req.body = result

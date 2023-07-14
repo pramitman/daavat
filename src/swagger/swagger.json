@@ -31,6 +31,15 @@
     },
     {
       "name": "Product"
+    },
+    {
+      "name": "Agency"
+    },
+    {
+      "name": "Gallery"
+    },
+    {
+      "name": "User"
     }
   ],
   "consumes": [
@@ -3310,6 +3319,134 @@
         }
       }
     },
+    "/admin/shop/otp/verify": {
+      "post": {
+        "tags": [
+          "Shop"
+        ],
+        "description": "Register Admins",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "content-language",
+            "in": "header",
+            "description": "Headers Data",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "signature",
+            "in": "header",
+            "description": "Headers Data",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "businessName",
+            "in": "header",
+            "description": "Headers Data",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "operationId": "verifyOtp",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/verifyOtp"
+              }
+            }
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Verify Otp Created Successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/verifyOtp"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/shop/otp/resend": {
+      "post": {
+        "tags": [
+          "Shop"
+        ],
+        "description": "Register Admins",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "content-language",
+            "in": "header",
+            "description": "Headers Data",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "signature",
+            "in": "header",
+            "description": "Headers Data",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "businessName",
+            "in": "header",
+            "description": "Headers Data",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "operationId": "resendOtp",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/resendOtp"
+              }
+            }
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Resend Otp Created Successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/resendOtp"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/admin/order/add": {
       "post": {
         "tags": [
@@ -3504,12 +3641,6 @@
     }
   },
 
-
-
-
-
-
-
   "components": {
     "schemas": {
       "adminSignUp": {
@@ -3603,7 +3734,10 @@
             "type": "string"
           },
           "image": {
-            "type": "string"
+            "type": "array",
+            "items":{
+              "type":"string"
+            }
           },
           "variants": {
             "type": "string"
@@ -3619,7 +3753,10 @@
             "type": "string"
           },
           "image": {
-            "type": "string"
+            "type": "array",
+            "items":{
+              "type":"string"
+            }
           },
           "variants": {
             "type": "string"
@@ -3742,12 +3879,6 @@
           "contact": {
             "type": "string"
           },
-          "uniqueId": {
-            "type": "string"
-          },
-          "password": {
-            "type": "string"
-          },
           "role": {
             "type": "string"
           },
@@ -3774,12 +3905,6 @@
             "type": "string"
           },
           "contact": {
-            "type": "string"
-          },
-          "uniqueId": {
-            "type": "string"
-          },
-          "password": {
             "type": "string"
           },
           "role": {
@@ -3858,12 +3983,6 @@
           "name": {
             "type": "string"
           },
-          "uniqueId": {
-            "type": "string"
-          },
-          "password": {
-            "type": "string"
-          },
           "role": {
             "type": "string"
           },
@@ -3881,12 +4000,6 @@
             "type": "string"
           },
           "name": {
-            "type": "string"
-          },
-          "uniqueId": {
-            "type": "string"
-          },
-          "password": {
             "type": "string"
           },
           "role": {
@@ -3925,8 +4038,13 @@
       },
       "addRole": {
         "properties": {
-          "roleDetails": [
-            {
+          "name":{
+            "type": "string"
+          },
+          "roleDetails" : {
+            "type":"array",
+            "items" : {
+              "properties":{
               "tabId": {
                 "type": "string"
               },
@@ -3942,23 +4060,32 @@
               "delete": {
                 "type": "boolean"
               },
-              "filters": [
-                {
-                  "id": "string",
-                  "hasAccess": "boolean"
+              "filters": {
+                "type":"array",
+                "items" : {
+                  "properties":{
+                    "id": {"type": "string"},
+                    "hasAccess": {"type":"boolean"}
+                    }
+                  }
                 }
-              ]
+              }
             }
-          ]
+          }
         }
       },
       "updateRole": {
         "properties": {
-          "roleDetails": [
-            {
-              "id": {
-                "type": "string"
-              },
+          "_id": {
+            "type": "string"
+          },
+          "name":{
+            "type": "string"
+          },
+          "roleDetails" : {
+            "type":"array",
+            "items" : {
+              "properties":{
               "tabId": {
                 "type": "string"
               },
@@ -3974,14 +4101,18 @@
               "delete": {
                 "type": "boolean"
               },
-              "filters": [
-                {
-                  "id": "string",
-                  "hasAccess": "boolean"
+              "filters": {
+                "type":"array",
+                "items" : {
+                  "properties":{
+                    "_id": {"type": "string"},
+                    "hasAccess": {"type":"boolean"}
+                    }
+                  }
                 }
-              ]
+              }
             }
-          ]
+          }
         }
       },
       "deleteRole": {
@@ -4028,9 +4159,10 @@
             "type": "boolean"
           },
           "tabFilters": {
-            "type": [
-              "string"
-            ]
+            "type": "array",
+            "items":{
+              "type":"string"
+            }
           },
           "parentId": {
             "type": "string"
@@ -4064,9 +4196,10 @@
             "type": "boolean"
           },
           "tabFilters": {
-            "type": [
-              "string"
-            ]
+            "type": "array",
+            "items" :{
+              "type":"string"
+            }
           },
           "parentId": {
             "type": "string"
@@ -4132,23 +4265,25 @@
             "type": "string"
           },
           "contact": {
-            "countryCode": {"type":"String"},
-            "mobile": {"type":"String"}
+            "type": "object",
+            "properties": {
+              "countryCode": {"type":"string"},
+              "mobile": {"type":"string"}
+            }
           },
-          "uniqueId": {"type":"String"},
-          "password": {"type":"String"},
-          "areaCode": {"type":"String"},
-          "shopPhoto": {"type":"String"},
+          "areaCode": {"type":"string"},
+          "shopPhoto": {"type":"string"},
           "address": {
-            "addressLine":{"type":"String"},
-            "latitude":{"type":"String"},
-            "longitude": {"type":"String"}
+            "type": "object",
+            "properties": {
+              "addressLine":{"type":"string"},
+              "latitude":{"type":"string"},
+              "longitude": {"type":"string"}
+            }
           },
-          "otp": {"type":"String"},
-          "otpExpireTime": {"type":"Date"},
-          "role": {"type":"String"},
-          "roleId": {"type":"String"},
-          "isMobileValid": {"type":"Boolean"}
+          "role": {"type":"string"},
+          "roleId": {"type":"string"},
+          "isMobileValid": {"type":"boolean"}
         }
       },
       "updateShop": {
@@ -4163,23 +4298,25 @@
             "type": "string"
           },
           "contact": {
-            "countryCode": {"type":"String"},
-            "mobile": {"type":"String"}
+            "type": "object",
+            "properties": {
+              "countryCode": {"type":"string"},
+              "mobile": {"type":"string"}
+            }
           },
-          "uniqueId": {"type":"String"},
-          "password": {"type":"String"},
-          "areaCode": {"type":"String"},
-          "shopPhoto": {"type":"String"},
+          "areaCode": {"type":"string"},
+          "shopPhoto": {"type":"string"},
           "address": {
-            "addressLine":{"type":"String"},
-            "latitude":{"type":"String"},
-            "longitude": {"type":"String"}
+            "type": "object",
+            "properties": {
+              "addressLine":{"type":"string"},
+              "latitude":{"type":"string"},
+              "longitude": {"type":"string"}
+            }
           },
-          "otp": {"type":"String"},
-          "otpExpireTime": {"type":"Date"},
-          "role": {"type":"String"},
-          "roleId": {"type":"String"},
-          "isMobileValid": {"type":"Boolean"}
+          "role": {"type":"string"},
+          "roleId": {"type":"string"},
+          "isMobileValid": {"type":"boolean"}
         }
       },
       "deleteShop": {
@@ -4194,7 +4331,10 @@
             "type": "number"
           },
           "areaFilter" : {
-            "type" : ["string"]
+            "type": "array",
+              "items" : {
+                "type":"string"
+              } 
           }
         }
       },
@@ -4205,49 +4345,86 @@
           }
         }
       },
+      "verifyOtp":{
+        "properties":{
+          "shopId":{
+            "type":"string"
+          },
+          "otp":{
+            "type":"string"
+          }
+        }
+      },
+      "resendOtp":{
+        "properties":{
+          "shopId":{
+            "type":"string"
+          }
+        }
+      },
       "addOrder": {
         "properties": {
-          "products" : [
-            {
-                "productId": {"type" : "String"},
-                "price":  {"type" : "String"},
-                "quantity" : {"type" : "String"},
-                "unitType" : {"type" : "String"}
-            }
-        ],
-        "total":  {"type" : "String"},
-        "gst":  {"type" : "String"},
-        "agencyId":{"type" : "String"},
-        "salesmanId":{"type" : "String"},
-        "shopId":{"type" : "String"},
-        "delieverymanId":{"type" : "String"},
-        "status": {"type" : "String"}
+          "products" : {
+            "type":"array",
+              "items" : {
+                "properties":{
+                  "productId": {
+                    "type" : "string"
+                  },
+                  "price":  {
+                    "type" : "string"
+                  },
+                  "quantity" : {
+                    "type" : "string"
+                  },
+                  "unitType" : {
+                    "type" : "string"
+                  }
+                }
+              }
+            },
+        "total":  {"type" : "string"},
+        "gst":  {"type" : "string"},
+        "agencyId":{"type" : "string"},
+        "salesmanId":{"type" : "string"},
+        "shopId":{"type" : "string"},
+        "delieverymanId":{"type" : "string"}
       }
 
-    },
-    "updateOrder": {
+      },
+      "updateOrder": {
       "properties": {
         "_id": {
           "type": "string"
         },
-        "products" : [
-          {
-              "productId": {"type" : "String"},
-              "price":  {"type" : "String"},
-              "quantity" : {"type" : "String"},
-              "unitType" : {"type" : "String"}
-          }
-      ],
-      "total":  {"type" : "String"},
-      "gst":  {"type" : "String"},
-      "agencyId":{"type" : "String"},
-      "salesmanId":{"type" : "String"},
-      "shopId":{"type" : "String"},
-      "delieverymanId":{"type" : "String"},
-      "status": {"type" : "String"}
+        "products" : {
+          "type":"array",
+            "items" : {
+              "properties":{
+                "productId": {
+                  "type" : "string"
+                },
+                "price":  {
+                  "type" : "string"
+                },
+                "quantity" : {
+                  "type" : "string"
+                },
+                "unitType" : {
+                  "type" : "string"
+                }
+              }
+            }
+          },
+      "total":  {"type" : "string"},
+      "gst":  {"type" : "string"},
+      "agencyId":{"type" : "string"},
+      "salesmanId":{"type" : "string"},
+      "shopId":{"type" : "string"},
+      "delieverymanId":{"type" : "string"}
     }
-    },
-    "getAllOrder": {
+      },
+      "getAllOrder": {
       "properties": {
         "page": {
           "type": "number"
@@ -4262,10 +4439,8 @@
           "type" : "string"
         }
       }
-    }
-
-
-},
+      }
+    },
     "securitySchemes": {
       "ApiKeyAuth": {
         "type": "apiKey",

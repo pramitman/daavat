@@ -13,5 +13,5 @@ import { config } from './config';
 
 const port = config.PORT || 7000;
 server.listen(port, () => {
-    console.log(`server started on port ${port}`);
+    console.log(`server started on port httP://localhost:${port}/swagger`);
 });
